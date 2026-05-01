@@ -1,0 +1,11 @@
+.imgContainer {
+    padding: 50px;
+    overflow: hidden;
+    width: 1040px;
+    transform-origin: top left;
+}
+
+.img {
+    /* transform: scaleX(2) scaleY(2) scaleZ(2); */
+
+}
