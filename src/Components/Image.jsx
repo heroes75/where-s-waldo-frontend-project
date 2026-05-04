@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "../Styles/styleImage.module.css";
 
 export default function Image({ targets, imgUrl, unknownFunction }) {
@@ -7,6 +7,7 @@ export default function Image({ targets, imgUrl, unknownFunction }) {
     const [prevCursorPosition, setPrevCursorPosition] = useState({x:0, y:0});
     const [clientPosition, setClientPosition] = useState({x:0, y:0});
     const [onMove, setOnMove] = useState(false);
+    const img = useRef(null)
     // const [pageYOffset, setPageYOffset] = useState(0);
     
 
@@ -24,12 +25,19 @@ export default function Image({ targets, imgUrl, unknownFunction }) {
         const rect = e.target.getBoundingClientRect();
         console.log('rect.top:', rect.top)
         console.log('rect.height:', rect.height)
+        console.log('rect.right:', rect.right)
+        console.log('rect.width:', rect.width)
         console.log('rect.x:', rect.x)
+        console.log('rect.left:', rect.left)
         console.log('rect.y:', rect.y)
         console.log('e.clientX:', e.clientX)
         console.log('e.clientY:', e.clientY)
-        const x = (e.clientX - Math.floor(rect.x))
-        const y = (e.clientY - Math.floor(rect.y))
+        console.log('img.scrollTop:', img.scrollTop)
+        console.log('img:', img)
+        const x = (((e.clientX- (rect.left < 0 ? 0 : rect.left) / scale) / rect.width) * 100)
+        const y = (((e.clientY- (rect.top < 0 ? 0 : rect.top) / scale) / rect.height) * 100)
+        // const x = e.clientX + document.body.scrollLeft - document.body.clientLeft;
+        // const y= e.clientY + document.body.scrollTop  - document.body.clientTop
         console.log('{x, y}:', {x, y})
         setClientPosition({x: e.clientX, y: e.clientY})
         setCursorPosition({x, y})
@@ -44,27 +52,28 @@ export default function Image({ targets, imgUrl, unknownFunction }) {
         console.log('scale', scale)
         console.log('cursorPosition', cursorPosition)
         setPrevCursorPosition({x: cursorPosition.x, y: cursorPosition.y})
-        setScale(prev => Math.min(Math.max(prev + e.deltaY * -0.01, .125), 8))
+        setScale(prev => Math.min(Math.max(prev + e.deltaY * -0.01, 1), 8))
     }
     
     return (
         <>
-            <span style={{position: 'relative', left: `${clientPosition.x}px`, top: `${cursorPosition.y}px`, zIndex: 2}}>{cursorPosition.x}:{cursorPosition.y}</span>
+            {/* <span style={{position: 'relative', left: `${clientPosition.x}%`, top: `${cursorPosition.y}%`, zIndex: 2}}>{cursorPosition.x}:{cursorPosition.y}</span> */}
             <div className={styles.imgContainer} style={{ padding: "0", position: 'relative', margin:0}}>
                 <img
+                    ref={img}
                     className={styles.img}
                     style={!onMove ? {
                         margin: 0,
                         padding: 0,
                         width: "1000px",
                         transform: `scale(${scale})`,
-                        transformOrigin: `${cursorPosition.x}px ${cursorPosition.y}px`
+                        transformOrigin: `${cursorPosition.x }% ${cursorPosition.y }%`
                     } : {
                         margin: 0,
                         padding: 0,
                         width: "1000px",
                         transform: `scale(${scale})`,
-                        transformOrigin: `${prevCursorPosition.x}px ${prevCursorPosition.y}px`
+                        transformOrigin: `${prevCursorPosition.x}% ${prevCursorPosition.y}%`
                     }}
                     onMouseMove={HandlePosition}
                     src="src/assets/level2-scene.webp"
