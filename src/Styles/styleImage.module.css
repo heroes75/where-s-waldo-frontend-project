@@ -1,7 +1,7 @@
 .imgContainer {
-    padding: 50px;
+    /* padding: 50px; */
     overflow: hidden;
-    width: 1040px;
+    width: 850px;
     transform-origin: top left;
 }
 

@@ -1,13 +1,13 @@
 import { useState } from "react";
 import Header from "./Header";
 import Image from "./Image";
-
-export default function GameTime() {
+import styles from '../Styles/Game.module.css'
+export default function Game() {
     
     return (
         <>
             <Header />
-            <main >
+            <main className={styles.main}>
                 <Image />
             </main>
         </>

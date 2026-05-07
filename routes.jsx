@@ -1,5 +1,5 @@
 import App from "./src/App";
-import GameTime from "./src/Components/GameTime";
+import Game from "./src/Components/Game";
 
 const routes = [
     {
@@ -7,7 +7,7 @@ const routes = [
         path: '/'
     },
     {
-        element: <GameTime />,
+        element: <Game />,
         path: '/game'
     }
 ]
