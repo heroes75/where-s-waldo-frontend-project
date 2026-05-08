@@ -57,46 +57,46 @@ export default function Image({ targets, imgUrl, unknownFunction }) {
         // e.preventDefault()
         setOnMove(false)
         // console.log('e.deltaY:', e.deltaY)
-        // console.log('scale', scale)
+        console.log('scale', scale)
         console.log('cursorPosition', cursorPosition)
+        console.log('prevTranslateCursorPosition', prevCursorTranslatePosition)
         setPrevCursorScrollPosition({x: cursorPosition.x, y: cursorPosition.y})
         setScale(prev => Math.min(Math.max(prev + e.deltaY * -0.01, 1), 8))
     }
 
     function handleMvtImage(e) {
         const rect = e.target.getBoundingClientRect()
-        const x = (e.clientX / rect.width) * 100;
-        const y = (e.clientY / rect.height) * 100;
+        const x = (((e.clientX - rect.x) / rect.width) * 100) / scale;
+        const y = (((e.clientY - rect.y) / rect.height) * 100) / scale;
         setMvt({x, y})
         console.log('x: e.clientX, y: e.clientY:', x, y)
-        // if(isPressedCtrl) {
-            
-        //     if(prevIsPressedCtrl.current === false) {
-        //         setStartTranslatePosition({x, y})
-        //     }
-        //     console.log('x startTranslation, y startTranslation:', startTranslatePosition.x, startTranslatePosition.y)
-        //     console.log('x - startTranslatePosition.x, y - startTranslatePosition.y', x - startTranslatePosition.x, y - startTranslatePosition.y)
-        // } 
+        if(isPressedCtrl) {
+            console.log('x - startTranslatePosition.x:', x - startTranslatePosition.x)
+            console.log('y - startTranslatePosition.y:', y - startTranslatePosition.y)
+            console.log('scale', scale)
+            setVectorTranslation({x: x - startTranslatePosition.x, y: y - startTranslatePosition.y})
+        } 
         // else {
         //     setStartTranslatePosition({x:0, y:0})
         // }
     }
-
+ 
     function handleMouseDown(e) {
         e.preventDefault()
         setIsPressedCtrl(true)
-        console.log('mouse down')
-        setStartTranslatePosition({x: mvt.x - 1, y: mvt.y - 1})
-        console.log('tartTranslatePosition.x , tartTranslatePosition.y', mvt.x, mvt.y)
+        console.log('MOUSE DOWN')
+        console.log('scale', scale)
+        setStartTranslatePosition({x: mvt.x - vectorTranslation.x, y: mvt.y - vectorTranslation.y})
+        console.log('tartTranslatePosition.x , tartTranslatePosition.y', mvt.x - vectorTranslation.x, mvt.y - vectorTranslation.y)
         
     }
 
     function handleMouseUp() {
-        console.log('Mouse Up')
+        console.log('MOUSE UP')
         setIsPressedCtrl(false)
-        setPrevCursorTranslatePosition({x: mvt.x - startTranslatePosition.x, y: mvt.y - startTranslatePosition.y})
-        console.log('mvt.y - startTranslatePosition.y:', mvt.y - startTranslatePosition.y)
-        console.log('mvt.x - startTranslatePosition.x:', mvt.x - startTranslatePosition.x)
+        setPrevCursorTranslatePosition({x: vectorTranslation.x, y: vectorTranslation.y})
+        // console.log('mvt.y - startTranslatePosition.y:', mvt.y - startTranslatePosition.y)
+        // console.log('mvt.x - startTranslatePosition.x:', mvt.x - startTranslatePosition.x)
     }
     // function handlePressedKey(e) {
     //     console.log('e.code:', e.code)
@@ -113,14 +113,14 @@ export default function Image({ targets, imgUrl, unknownFunction }) {
                     style={!onMove ? {
                         margin: 0,
                         padding: 0,
-                        width: "90%",
+                        width: "100%",
                         transform: `translate(${prevCursorTranslatePosition.x}%, ${prevCursorTranslatePosition.y}%) scale(${scale})`,
                         transformOrigin: `${cursorPosition.x}% ${cursorPosition.y}%`
                     } : {
                         margin: 0,
                         padding: 0,
-                        width: "90%",
-                        transform: isPressedCtrl ? `translate(${mvt.x - startTranslatePosition.x + prevCursorTranslatePosition.x}%, ${mvt.y - startTranslatePosition.y + prevCursorTranslatePosition.y}%) scale(${scale}) ` : `translate(${prevCursorTranslatePosition.x}%, ${prevCursorTranslatePosition.y}%) scale(${scale}) `,
+                        width: "100%",
+                        transform: isPressedCtrl ? `translate(${vectorTranslation.x}%, ${vectorTranslation.y}%) scale(${scale}) ` : `translate(${prevCursorTranslatePosition.x}%, ${prevCursorTranslatePosition.y}%) scale(${scale}) `,
                         transformOrigin: `${prevCursorScrollPosition.x}% ${prevCursorScrollPosition.y}%`
                     }}
                     onMouseMove={HandlePosition}
