@@ -14,16 +14,8 @@ export default function Image({ targets, imgUrl, unknownFunction }) {
     const [isPressedCtrl, setIsPressedCtrl] = useState(false);
     const img = useRef(null)
     const prevIsPressedCtrl = useRef()
-    // const [pageYOffset, setPageYOffset] = useState(0);
+    const prevScale = useRef(1)
     
-
-    // useEffect(() => {
-    //     window.addEventListener('scroll', (e) => {
-    //         console.log('img.scrollTop', img.current.scrollTop)
-    //         console.log('document.documentElement.scrollTop', document.documentElement.scrollTop)
-    //     })
-    // }, []);
-
     function HandlePosition(e) {
         const rect = e.target.getBoundingClientRect();
         // console.log('rect.top:', rect.top)
@@ -40,10 +32,10 @@ export default function Image({ targets, imgUrl, unknownFunction }) {
         const x = ((e.clientX - rect.left) / rect.width) * 100
         const y = ((e.clientY - rect.top) / rect.height) * 100
         console.log('{x, y}:', {x, y})
+        console.log('prevCursorTranslation', prevCursorTranslatePosition)
         setClientPosition({x: (e.clientX / rect.width) * 100, y: (e.clientY / rect.height) * 100})
         setCursorPosition({x, y})
         setOnMove(true)
-        console.log('e.ctrlKey:', e.ctrlKey)
         // setIsPressedCtrl(prev => {
         //     prevIsPressedCtrl.current = prev
         //     return e.ctrlKey
@@ -61,13 +53,24 @@ export default function Image({ targets, imgUrl, unknownFunction }) {
         console.log('cursorPosition', cursorPosition)
         console.log('prevTranslateCursorPosition', prevCursorTranslatePosition)
         setPrevCursorScrollPosition({x: cursorPosition.x, y: cursorPosition.y})
-        setScale(prev => Math.min(Math.max(prev + e.deltaY * -0.01, 1), 8))
+        console.log('prevScale:', prevScale.current)
+        setScale(prev => {
+            console.log('prev:', prev)
+            const newScale = Math.min(Math.max(prev + e.deltaY * -0.01 * prevScale.current, 1), 8)
+            setPrevCursorTranslatePosition(prev => ({x: prev.x / newScale, y: prev.y / newScale}))
+            setVectorTranslation(prev => ({x: prev.x / newScale, y: prev.y / newScale}))
+            console.log('newScale:', newScale)
+            return newScale
+        })
+        
     }
 
     function handleMvtImage(e) {
         const rect = e.target.getBoundingClientRect()
-        const x = (((e.clientX - rect.x) / rect.width) * 100) / scale;
-        const y = (((e.clientY - rect.y) / rect.height) * 100) / scale;
+        console.log('rect.width: on imageContainer', rect.width)
+        console.log('e.clientX: on imageContainer', e.clientX)
+        const x = (((e.clientX) / rect.width) * 100) ;
+        const y = (((e.clientY) / rect.height) * 100);
         setMvt({x, y})
         console.log('x: e.clientX, y: e.clientY:', x, y)
         if(isPressedCtrl) {
@@ -86,6 +89,7 @@ export default function Image({ targets, imgUrl, unknownFunction }) {
         setIsPressedCtrl(true)
         console.log('MOUSE DOWN')
         console.log('scale', scale)
+        prevScale.current = scale
         setStartTranslatePosition({x: mvt.x - vectorTranslation.x, y: mvt.y - vectorTranslation.y})
         console.log('tartTranslatePosition.x , tartTranslatePosition.y', mvt.x - vectorTranslation.x, mvt.y - vectorTranslation.y)
         
@@ -105,8 +109,8 @@ export default function Image({ targets, imgUrl, unknownFunction }) {
     
     return (
         <>
-            {/* <span style={{position: 'absolute', left: `${clientPosition.x}%`, top: `${cursorPosition.y}%`, zIndex: 2}}>{cursorPosition.x}:{cursorPosition.y}</span> */}
-            <div onMouseMove={handleMvtImage} className={styles.imgContainer} style={{ padding: "0", position: 'relative', margin:0}}>
+            <div style={{position: 'absolute', transform: `translate(${cursorPosition.x}%, ${cursorPosition.y}%)`, zIndex: 2, margin: 0, padding: 0, color: 'black', fontWeight: 'bolder'}}>{cursorPosition.x.toFixed(3)}:{cursorPosition.y.toFixed(3)}</div>
+            <div onMouseMove={handleMvtImage} className={styles.imgContainer} style={{ padding: 0, position: 'relative', margin:0}}>
                 <img
                     ref={img}
                     className={styles.img}
@@ -114,13 +118,13 @@ export default function Image({ targets, imgUrl, unknownFunction }) {
                         margin: 0,
                         padding: 0,
                         width: "100%",
-                        transform: `translate(${prevCursorTranslatePosition.x}%, ${prevCursorTranslatePosition.y}%) scale(${scale})`,
+                        transform: `translate(${prevCursorTranslatePosition.x}%, ${prevCursorTranslatePosition.y}%) scale(${scale}) `,
                         transformOrigin: `${cursorPosition.x}% ${cursorPosition.y}%`
                     } : {
                         margin: 0,
                         padding: 0,
                         width: "100%",
-                        transform: isPressedCtrl ? `translate(${vectorTranslation.x}%, ${vectorTranslation.y}%) scale(${scale}) ` : `translate(${prevCursorTranslatePosition.x}%, ${prevCursorTranslatePosition.y}%) scale(${scale}) `,
+                        transform: isPressedCtrl ? `translate(${vectorTranslation.x}%, ${vectorTranslation.y}%) scale(${scale}) ` : `translate(${prevCursorTranslatePosition.x}%, ${prevCursorTranslatePosition.y }%) scale(${scale}) `,
                         transformOrigin: `${prevCursorScrollPosition.x}% ${prevCursorScrollPosition.y}%`
                     }}
                     onMouseMove={HandlePosition}
