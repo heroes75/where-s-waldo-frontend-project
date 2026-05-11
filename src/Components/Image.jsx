@@ -15,6 +15,7 @@ export default function Image({ targets, imgUrl, unknownFunction }) {
     const img = useRef(null)
     const prevIsPressedCtrl = useRef()
     const prevScale = useRef(1)
+    const targetingBox = {x: ( clientPosition.x), y: ( clientPosition.y)}
     
     function HandlePosition(e) {
         const rect = e.target.getBoundingClientRect();
@@ -33,7 +34,7 @@ export default function Image({ targets, imgUrl, unknownFunction }) {
         const y = ((e.clientY - rect.top) / rect.height) * 100
         console.log('{x, y}:', {x, y})
         console.log('prevCursorTranslation', prevCursorTranslatePosition)
-        setClientPosition({x: (e.clientX / rect.width) * 100, y: (e.clientY / rect.height) * 100})
+        // setClientPosition({x: (e.clientX / rect.width) * 100, y: (e.clientY / rect.height) * 100})
         setCursorPosition({x, y})
         setOnMove(true)
         // setIsPressedCtrl(prev => {
@@ -67,16 +68,24 @@ export default function Image({ targets, imgUrl, unknownFunction }) {
 
     function handleMvtImage(e) {
         const rect = e.target.getBoundingClientRect()
-        console.log('rect.width: on imageContainer', rect.width)
-        console.log('e.clientX: on imageContainer', e.clientX)
-        const x = (((e.clientX) / rect.width) * 100) ;
+        const rectImage = img.current.getBoundingClientRect()
+        // console.log('rectImage:', rectImage)
+        // console.log('rect.width: on imageContainer', rect.width)
+        // console.log('e.clientX: on imageContainer', e.clientX)
+        const x = (((e.clientX) / rect.width) * 100);
+        const xImg = (((e.clientX - rectImage.left) / rectImage.width) * 100);
+        console.log('xImg:', xImg)
+        const yImg = (((e.clientY - rectImage.top) / rectImage.height) * 100);
+        console.log('yImg:', yImg)
         const y = (((e.clientY) / rect.height) * 100);
         setMvt({x, y})
+        setClientPosition({x: (((e.clientX - rect.left) / rect.width) * 100) - xImg, y: (((e.clientY - rect.top) / rect.height) * 100) - yImg})
         console.log('x: e.clientX, y: e.clientY:', x, y)
+        console.log('x: e.Img, y: e.Img:', xImg, yImg)
         if(isPressedCtrl) {
-            console.log('x - startTranslatePosition.x:', x - startTranslatePosition.x)
-            console.log('y - startTranslatePosition.y:', y - startTranslatePosition.y)
-            console.log('scale', scale)
+            // console.log('x - startTranslatePosition.x:', x - startTranslatePosition.x)
+            // console.log('y - startTranslatePosition.y:', y - startTranslatePosition.y)
+            // console.log('scale', scale)
             setVectorTranslation({x: x - startTranslatePosition.x, y: y - startTranslatePosition.y})
         } 
         // else {
@@ -109,12 +118,13 @@ export default function Image({ targets, imgUrl, unknownFunction }) {
     
     return (
         <>
-            <div style={{position: 'absolute', transform: `translate(${cursorPosition.x}%, ${cursorPosition.y}%)`, zIndex: 2, margin: 0, padding: 0, color: 'black', fontWeight: 'bolder'}}>{cursorPosition.x.toFixed(3)}:{cursorPosition.y.toFixed(3)}</div>
-            <div onMouseMove={handleMvtImage} className={styles.imgContainer} style={{ padding: 0, position: 'relative', margin:0}}>
+            <div onMouseMove={handleMvtImage} className={styles.imgContainer} style={{ padding: 0, margin:0}}>
+                <div style={{position: 'absolute' , left: `${targetingBox.x}%`, top: `${targetingBox.y}%`, zIndex: 2, margin: 0, padding: 0, color: 'black', fontWeight: 'bolder'}}>{targetingBox.x.toFixed(3)}:{targetingBox.y.toFixed(3)}</div>
                 <img
                     ref={img}
                     className={styles.img}
                     style={!onMove ? {
+                        position: 'relative',
                         margin: 0,
                         padding: 0,
                         width: "100%",
@@ -122,6 +132,7 @@ export default function Image({ targets, imgUrl, unknownFunction }) {
                         transformOrigin: `${cursorPosition.x}% ${cursorPosition.y}%`
                     } : {
                         margin: 0,
+                        position: 'relative',
                         padding: 0,
                         width: "100%",
                         transform: isPressedCtrl ? `translate(${vectorTranslation.x}%, ${vectorTranslation.y}%) scale(${scale}) ` : `translate(${prevCursorTranslatePosition.x}%, ${prevCursorTranslatePosition.y }%) scale(${scale}) `,
