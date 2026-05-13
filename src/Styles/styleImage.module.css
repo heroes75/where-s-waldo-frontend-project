@@ -1,6 +1,33 @@
+.gameSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .imgContainer {
     /* padding: 50px; */
     overflow: hidden;
     width: 90%;
     /* transform-origin: top left; */
+}
+
+.imageTarget {
+    width: 50px;
+    border-radius: 50%;
+}
+
+.li {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    gap: 7px;
+    border-bottom: 2px dashed blue;
+}
+
+.ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
 }
