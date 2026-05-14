@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "../Styles/styleImage.module.css";
 
-export default function Image({ imgUrl, unknownFunction }) {
+export default function Image({ targets, imgUrl, setTargets }) {
     const [scale, setScale] = useState(1);
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [prevCursorScrollPosition, setPrevCursorScrollPosition] = useState({
@@ -27,10 +27,10 @@ export default function Image({ imgUrl, unknownFunction }) {
     const imgContainer = useRef(null);
     const prevIsPressedCtrl = useRef();
     const prevScale = useRef(1);
-    const targets = [
-        { x: 84.855, y: 30.859, name: "Waldo", url: "" },
-        { x: 3, y: 3, name: "emmanuel", url: "" },
-    ];
+    // const targets = [
+    //     { x: 84.855, y: 30.859, name: "Waldo", url: "" },
+    //     { x: 3, y: 3, name: "emmanuel", url: "" },
+    // ];
 
     function HandlePosition(e) {
         const rect = e.target.getBoundingClientRect();
@@ -179,11 +179,43 @@ export default function Image({ imgUrl, unknownFunction }) {
 
     function handleSelect(e) {
         const r = 2.5;
-        const [{x, y, name}] = targets.filter(target => target.name === e.target.dataset.value)
-        const isTargetClicked = (selectedPoint.x - x)**2 + (selectedPoint.y - y)**2 <= r*r
-        console.log('isTargetClicked:', isTargetClicked)
+        // const [{x, y, name}] = targets.filter(target => target.name === e.target.dataset.value)
+        // const newTargets = [...targets]
+        // const isTargetClicked = (selectedPoint.x - x)**2 + (selectedPoint.y - y)**2 <= r*r
+        // console.log('isTargetClicked:', isTargetClicked)
         setIsShowTargetingBox(false)
-        setOupout(`${name} ${isTargetClicked ? 'Found' : 'is not here'}`)
+        setTargets(targets.map(target => {
+            if(target.name === e.target.dataset.value) {
+                const isTargetClicked = (selectedPoint.x - target.x)**2 + (selectedPoint.y - target.y)**2 <= r*r
+                if(isTargetClicked) {
+                    setOupout(`${target.name} Found`)
+                    target.found = true
+                } else {
+                    setOupout(`${target.name} Is Not Here`)
+                }
+            }
+            return target
+        }))
+        // setOupout(`${name} ${isTargetClicked ? 'Found' : 'is not here'}`)
+    }
+
+    function handleReset() {
+        setScale(1)
+        setClientPosition({x: 0, y: 0})
+        setCursorPosition({x: 0, y: 0})
+        setMvt({x: 0, y: 0})
+        setCursorPosition({x:0, y: 0})
+        setPrevCursorScrollPosition({x:0,y:0})
+        setPrevCursorTranslatePosition({x:0,y:0})
+        setSelectedPoint({x:0,y:0})
+        setTargetingBox({x:0, y:0})
+        setStartTranslatePosition({x:0,y:0})
+        setVectorTranslation({x:0,y:0})
+        setIsPressedCtrl(false)
+        setOnMove(false)
+        setIsShowTargetingBox(false)
+        setOupout('')
+        prevScale.current = 1
     }
 
     return (
@@ -214,7 +246,7 @@ export default function Image({ imgUrl, unknownFunction }) {
                         <ul className={styles.ul} onClick={handleSelect} id="target">
                             {targets.map((target) => (
                                 <li key={target.name} className={styles.li} data-value={target.name}>
-                                    <img data-value={target.name} src="src/assets/level2-scene.webp" className={styles.imageTarget} src={target.url} alt={target.name} />{" "}
+                                    <img data-value={target.name} src="src/assets/level-scene.png" className={styles.imageTarget} src={target.url} alt={target.name} />{" "}
                                     <div data-value={target.name}>{target.name}</div>
                                 </li>
                             ))}
@@ -244,7 +276,7 @@ export default function Image({ imgUrl, unknownFunction }) {
                                   }
                         }
                         onMouseMove={HandlePosition}
-                        src="src/assets/level2-scene.webp"
+                        src={imgUrl}
                         alt="image of level 2"
                         onWheel={handleZoom}
                         onMouseDown={handleMouseDown}
@@ -253,6 +285,7 @@ export default function Image({ imgUrl, unknownFunction }) {
                         // onKeyDown={handlePressedKey}
                     />
                 </div>
+                <button onClick={handleReset}>Reset view</button>
             </div>
         </>
     );

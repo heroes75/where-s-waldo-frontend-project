@@ -3,4 +3,20 @@
     justify-content: center;
     align-items: center;
     flex-grow: 2;
+    flex-direction: column;
+    gap: 11px;
+}
+
+.img {
+    width: 50px;
+}
+
+.ul {
+    display: flex;
+    gap: 10px;
+    padding: 11px;
+}
+
+.li {
+    list-style: none;
 }
