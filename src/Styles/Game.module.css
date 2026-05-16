@@ -7,6 +7,16 @@
     gap: 11px;
 }
 
+.dialog {
+    position: absolute;
+    left: calc(50% - 170px);
+    top: calc(50% - 27.5px);
+}
+
+::backdrop {
+    backdrop-filter: blur(5px);
+}
+
 .img {
     width: 50px;
 }

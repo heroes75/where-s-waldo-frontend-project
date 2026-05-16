@@ -253,6 +253,8 @@ export default function Image({ targets, imgUrl, setTargets }) {
                         </ul>
                         {/* {targetingBox.x.toFixed(3)}:{targetingBox.y.toFixed(3)} */}
                     </div>
+                        <div style={{position: 'absolute', zIndex: 3, top: clientPosition.y + '%', left: clientPosition.x + '%', backgroundColor: 'red'}}>{cursorPosition.x.toFixed(3) + ':' + cursorPosition.y.toFixed(3)}</div>
+
                     <img
                         ref={img}
                         className={styles.img}
