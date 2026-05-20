@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Header from "./Header";
 import Image from "./Image";
 import styles from '../Styles/Game.module.css'
+import { useParams } from "react-router";
 
 
 export default function Game() {
@@ -12,14 +13,17 @@ export default function Game() {
     ]);
     const [time, setTime] = useState(0)
     const dialog = useRef(null)
-    const imgUrl = 'src/assets/level1-scene.webp';
+    const [imgUrl, setImageUrl] = useState('')
     const isAllFound = targets.every(target => target.found)
     const timeDividedByTen = time /10
     const timeInSecond = Math.round(timeDividedByTen * 10) / 10
-    const timeFormat = Math.floor(timeInSecond/60**2) + ':' + Math.floor((timeInSecond/60)%60) + ':' + Math.round((timeInSecond%60) * 10) / 10 + 's'
+    const timeFormat = Math.floor(timeInSecond/60**2) + ':' + Math.floor((timeInSecond/60)%60) + ':' + Math.round((timeInSecond%60) * 10) / 10 + 's';
+    const {id} = useParams()
 
  
     useEffect(() => {
+
+
         const initialTime = Date.now()
         const intervalId = setInterval(() => {
             const timeNow = (Date.now() - initialTime) / 100
@@ -34,6 +38,17 @@ export default function Game() {
 
         return () => clearInterval(intervalId)
     }, [isAllFound])
+
+    useEffect(() => {
+        fetch(`http://localhost:3000/game/${id}`)
+            .then(res => {
+                return res.json()
+            })
+            .then(res => {
+                console.log('res:', res)
+                setImageUrl(res.game.url)
+            })
+    }, [])
 
     function handleCancel() {
         setTargets(targets.map(target => {

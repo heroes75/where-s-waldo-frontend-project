@@ -8,7 +8,7 @@ const routes = [
     },
     {
         element: <Game />,
-        path: '/game'
+        path: '/game/:id?'
     }
 ]
 
