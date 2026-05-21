@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "../Styles/styleImage.module.css";
 
-export default function Image({ targets, imgUrl, setTargets }) {
+export default function Image({ targets, imgUrl, setTargets, gameId }) {
     const [scale, setScale] = useState(1);
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [prevCursorScrollPosition, setPrevCursorScrollPosition] = useState({
@@ -17,12 +17,12 @@ export default function Image({ targets, imgUrl, setTargets }) {
         useState({ x: 0, y: 0 });
     const [vectorTranslation, setVectorTranslation] = useState({ x: 0, y: 0 });
     const [clientPosition, setClientPosition] = useState({ x: 0, y: 0 });
-    const [targetingBox, setTargetingBox] = useState({x: 0, y:0});
-    const [selectedPoint, setSelectedPoint] = useState({x: 0, y: 0})
-    const [isShowTargetingBox, setIsShowTargetingBox] = useState(false)
+    const [targetingBox, setTargetingBox] = useState({ x: 0, y: 0 });
+    const [selectedPoint, setSelectedPoint] = useState({ x: 0, y: 0 });
+    const [isShowTargetingBox, setIsShowTargetingBox] = useState(false);
     const [onMove, setOnMove] = useState(false);
     const [isPressedCtrl, setIsPressedCtrl] = useState(false);
-    const [oupout, setOupout] = useState('')
+    const [oupout, setOupout] = useState("");
     const img = useRef(null);
     const imgContainer = useRef(null);
     const prevIsPressedCtrl = useRef();
@@ -137,7 +137,7 @@ export default function Image({ targets, imgUrl, setTargets }) {
     function handleMouseDown(e) {
         e.preventDefault();
         setIsPressedCtrl(true);
-        setIsShowTargetingBox(false)
+        setIsShowTargetingBox(false);
         console.log("MOUSE DOWN");
         console.log("scale", scale);
         prevScale.current = scale;
@@ -164,58 +164,60 @@ export default function Image({ targets, imgUrl, setTargets }) {
     }
 
     function handleClick() {
-        // const r = 3;
-        // const isTargetClicked =
-        //     Math.sqrt(
-        //         (cursorPosition.x - target.x) ** 2 +
-        //             (cursorPosition.y - target.y) ** 2,
-        //     ) <= r;
-        // console.log("isTargetClicked:", isTargetClicked);
-        setSelectedPoint({x: cursorPosition.x, y: cursorPosition.y})
-        setTargetingBox({x: clientPosition.x, y: clientPosition.y})
-        setIsShowTargetingBox(!isShowTargetingBox)
-        console.log('!isShowTargetingBox:', !isShowTargetingBox)
+        setSelectedPoint({ x: cursorPosition.x, y: cursorPosition.y });
+        setTargetingBox({ x: clientPosition.x, y: clientPosition.y });
+        setIsShowTargetingBox(!isShowTargetingBox);
+        console.log("!isShowTargetingBox:", !isShowTargetingBox);
     }
 
     function handleSelect(e) {
-        const r = 2.5;
-        // const [{x, y, name}] = targets.filter(target => target.name === e.target.dataset.value)
-        // const newTargets = [...targets]
-        // const isTargetClicked = (selectedPoint.x - x)**2 + (selectedPoint.y - y)**2 <= r*r
-        // console.log('isTargetClicked:', isTargetClicked)
-        setIsShowTargetingBox(false)
-        setTargets(targets.map(target => {
-            if(target.name === e.target.dataset.value) {
-                const isTargetClicked = (selectedPoint.x - target.x)**2 + (selectedPoint.y - target.y)**2 <= r*r
-                if(isTargetClicked) {
-                    setOupout(`${target.name} Found`)
-                    target.found = true
-                } else {
-                    setOupout(`${target.name} Is Not Here`)
-                }
-            }
-            return target
-        }))
-        // setOupout(`${name} ${isTargetClicked ? 'Found' : 'is not here'}`)
+        setIsShowTargetingBox(false);
+        fetch(`http://localhost:3000/game/${gameId}`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                x: selectedPoint.x,
+                y: selectedPoint.y,
+                nameId: e.target.dataset.id,
+            }),
+        })
+            .then((res) => res.json())
+            .then((res) => {
+                    setTargets(
+                        targets.map((target) => {
+                            if (target.id === +e.target.dataset.id) {
+                                if (res.isHitTarget) {
+                                    setOupout(`${target.name} Found`);
+                                    target.found = true;
+                                } else {
+                                    setOupout(`${target.name} Is Not Here`);
+                                }
+                            }
+                            return target;
+                        }),
+                    );
+            });
     }
 
     function handleReset() {
-        setScale(1)
-        setClientPosition({x: 0, y: 0})
-        setCursorPosition({x: 0, y: 0})
-        setMvt({x: 0, y: 0})
-        setCursorPosition({x:0, y: 0})
-        setPrevCursorScrollPosition({x:0,y:0})
-        setPrevCursorTranslatePosition({x:0,y:0})
-        setSelectedPoint({x:0,y:0})
-        setTargetingBox({x:0, y:0})
-        setStartTranslatePosition({x:0,y:0})
-        setVectorTranslation({x:0,y:0})
-        setIsPressedCtrl(false)
-        setOnMove(false)
-        setIsShowTargetingBox(false)
-        setOupout('')
-        prevScale.current = 1
+        setScale(1);
+        setClientPosition({ x: 0, y: 0 });
+        setCursorPosition({ x: 0, y: 0 });
+        setMvt({ x: 0, y: 0 });
+        setCursorPosition({ x: 0, y: 0 });
+        setPrevCursorScrollPosition({ x: 0, y: 0 });
+        setPrevCursorTranslatePosition({ x: 0, y: 0 });
+        setSelectedPoint({ x: 0, y: 0 });
+        setTargetingBox({ x: 0, y: 0 });
+        setStartTranslatePosition({ x: 0, y: 0 });
+        setVectorTranslation({ x: 0, y: 0 });
+        setIsPressedCtrl(false);
+        setOnMove(false);
+        setIsShowTargetingBox(false);
+        setOupout("");
+        prevScale.current = 1;
     }
 
     return (
@@ -230,7 +232,7 @@ export default function Image({ targets, imgUrl, setTargets }) {
                 >
                     <div
                         style={{
-                            display: isShowTargetingBox ? 'flex' : 'none',
+                            display: isShowTargetingBox ? "flex" : "none",
                             position: "absolute",
                             left: `${targetingBox.x}%`,
                             top: `${targetingBox.y}%`,
@@ -243,17 +245,43 @@ export default function Image({ targets, imgUrl, setTargets }) {
                         }}
                         // onClick={() => handleClick}
                     >
-                        <ul className={styles.ul} onClick={handleSelect} id="target">
+                        <ul
+                            className={styles.ul}
+                            onClick={handleSelect}
+                            id="target"
+                        >
                             {targets.map((target) => (
-                                <li key={target.name} className={styles.li} data-value={target.name}>
-                                    <img data-value={target.name} src="src/assets/level-scene.png" className={styles.imageTarget} src={target.url} alt={target.name} />{" "}
-                                    <div data-value={target.name}>{target.name}</div>
+                                !target.found && <li
+                                    key={target.name}
+                                    className={styles.li}
+                                    data-id={target.id}
+                                >
+                                    <img
+                                        data-id={target.id}
+                                        src="src/assets/level-scene.png"
+                                        className={styles.imageTarget}
+                                        src={target.url}
+                                        alt={target.name}
+                                    />{" "}
+                                    <div data-id={target.id}>{target.name}</div>
                                 </li>
                             ))}
                         </ul>
                         {/* {targetingBox.x.toFixed(3)}:{targetingBox.y.toFixed(3)} */}
                     </div>
-                        <div style={{position: 'absolute', zIndex: 3, top: clientPosition.y + '%', left: clientPosition.x + '%', backgroundColor: 'red'}}>{cursorPosition.x.toFixed(3) + ':' + cursorPosition.y.toFixed(3)}</div>
+                    <div
+                        style={{
+                            position: "absolute",
+                            zIndex: 3,
+                            top: clientPosition.y + "%",
+                            left: clientPosition.x + "%",
+                            backgroundColor: "red",
+                        }}
+                    >
+                        {cursorPosition.x.toFixed(3) +
+                            ":" +
+                            cursorPosition.y.toFixed(3)}
+                    </div>
 
                     <img
                         ref={img}
