@@ -6,8 +6,7 @@ export default function Header() {
             <nav>
                 <ul>
                     <li><Link to='/'>HOME</Link></li>
-                    <li><Link to='/signup'>Signup</Link></li>
-                    <li><Link to='/login'>Login</Link></li>
+                    <li><Link to='/leadboard'>Leadboard</Link></li>
                 </ul>
             </nav>
         </header>

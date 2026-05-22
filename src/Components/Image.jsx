@@ -312,7 +312,6 @@ export default function Image({ targets, imgUrl, setTargets, gameId }) {
                         onMouseDown={handleMouseDown}
                         onMouseUp={handleMouseUp}
                         onDoubleClick={handleClick}
-                        // onKeyDown={handlePressedKey}
                     />
                 </div>
                 <button onClick={handleReset}>Reset view</button>

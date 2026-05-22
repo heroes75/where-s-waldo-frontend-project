@@ -2,24 +2,24 @@ import { useEffect, useRef, useState } from "react";
 import Header from "./Header";
 import Image from "./Image";
 import styles from '../Styles/Game.module.css'
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 
 export default function Game() {
     const [targets, setTargets] = useState([]);
     const [time, setTime] = useState(0)
-    const dialog = useRef(null)
     const [imgUrl, setImageUrl] = useState('')
+    const [name, setName] = useState('')
+    const dialog = useRef(null)
     const isAllFound = targets.length !==0 && targets.every(target => target.found === true)
     const timeDividedByTen = time /10
     const timeInSecond = Math.round(timeDividedByTen * 10) / 10
     const timeFormat = Math.floor(timeInSecond/60**2) + ':' + Math.floor((timeInSecond/60)%60) + ':' + Math.round((timeInSecond%60) * 10) / 10 + 's';
     const {id} = useParams()
+    const navigate = useNavigate()
 
  
     useEffect(() => {
-
-
         const initialTime = Date.now()
         const intervalId = setInterval(() => {
             const timeNow = (Date.now() - initialTime) / 100;
@@ -58,6 +58,21 @@ export default function Game() {
         setTime(0)
     }
 
+    function GoHome() {
+        navigate('/')
+    }
+
+    function handleAddRecord() {
+        fetch(`http://localhost:3000/leadboard/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({time: timeInSecond, name: name ? name : 'Anonymous'})
+        })
+        navigate('/')
+    }
+
     
     return (
         <>
@@ -70,16 +85,17 @@ export default function Game() {
                     <form>
                         <p>
                             <label htmlFor="username">Enter your username:</label>
-                            <input type="text" name="username" id="username" />
+                            <input value={name} onChange={e => setName(e.target.value)} type="text" name="username" id="username" />
                         </p>
                         <p>
-                            <button onClick={handleCancel} value='cancel' formmethod="dialog">Cancel</button>
-                            <button value='default'>Enter</button>
+                            <button onClick={handleCancel} value='cancel' formmethod="dialog">Replay</button>
+                            <button onClick={GoHome}>Go to home</button>
+                            <button onClick={handleAddRecord} value='default'>Enter</button>
                         </p>
                     </form>
                 </dialog>
                 <ul className={styles.ul}>
-                    {targets.map(target => <li key={target.name} style={{outline: target.found ? '3px solid green' : '3px solid black'}} className={styles.li}><img className={styles.img} src={target.url} alt={target.name} style={{filter: target.found ? 'grayscale(95%) brightness(.6)' : 'blur(0px)'}} /></li>)}
+                    {targets.map(target => <li key={target.name} style={{outline: target.found ? '4px solid green' : '4px solid black'}} className={styles.li}><img className={styles.img} src={target.url} alt={target.name} style={{filter: target.found ? 'grayscale(95%) brightness(.6)' : 'blur(0px)'}} /></li>)}
                 </ul>
                 <div>{timeInSecond}</div>
                 <Image imgUrl={imgUrl} targets={targets} setTargets={setTargets} gameId={id} />
