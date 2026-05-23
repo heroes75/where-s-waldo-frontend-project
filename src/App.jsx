@@ -9,15 +9,15 @@ function App() {
 
 	useEffect(() => {
 		// socket.connect()
-		socket.on('connect', () => console.log('succeeded test'))
-		// socket.emit('test', 'something', () => console.log('succeeded test'))
+		// socket.on('connect', () => console.log('succeeded test'))
+		// socket.emit('multiplayer', 'something', () => console.log('succeeded test'))
 
 		fetch(`http://localhost:3000/game`,)
 			.then(res => res.json())
 			.then(res => {
 				setGames(res.games)
 			})
-		return () => socket.disconnect()
+		// return () => socket.disconnect()
 	}, [])
     return (
 		<>
@@ -25,7 +25,7 @@ function App() {
 			<main>
 				<div>
 					<ul>
-						{games.map(game => <Link to={`/game/${game.id}`}><img style={{width: '300px'}} src={game.url} alt="game-level" /></Link>)}
+						{games.map(game => <Link key={game.id} to={`/game/${game.id}`}><img style={{width: '300px'}} src={game.url} alt="game-level" /></Link>)}
 					</ul>
 				</div>
 				<div>
