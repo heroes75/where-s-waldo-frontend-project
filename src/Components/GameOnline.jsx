@@ -3,9 +3,10 @@ import Header from "./Header";
 import Image from "./Image";
 import styles from '../Styles/Game.module.css'
 import { useNavigate, useParams } from "react-router";
+import socket from "../socket";
 
 
-export default function Game() {
+export default function GameOnline() {
     const [targets, setTargets] = useState([]);
     const [time, setTime] = useState(0)
     const [imgUrl, setImageUrl] = useState(null)
@@ -15,7 +16,7 @@ export default function Game() {
     const timeDividedByTen = time /10
     const timeInSecond = Math.round(timeDividedByTen * 10) / 10
     const timeFormat = Math.floor(timeInSecond/60**2) + ':' + Math.floor((timeInSecond/60)%60) + ':' + Math.round((timeInSecond%60) * 10) / 10 + 's';
-    const {id} = useParams()
+    const {id, roomId} = useParams()
     const navigate = useNavigate()
 
  
@@ -48,6 +49,8 @@ export default function Game() {
                     return name
                 }))
             })
+        console.log('roomId:', roomId)
+        socket.on(roomId, msg => console.log(msg))
     }, [])
 
     function handleCancel() {
@@ -98,7 +101,7 @@ export default function Game() {
                     {targets.map(target => <li key={target.name} style={{outline: target.found ? '4px solid green' : '4px solid black'}} className={styles.li}><img className={styles.img} src={target.url} alt={target.name} style={{filter: target.found ? 'grayscale(95%) brightness(.6)' : 'blur(0px)'}} /></li>)}
                 </ul>
                 <div>{timeInSecond}</div>
-                <Image imgUrl={imgUrl} targets={targets} setTargets={setTargets} gameId={id} />
+                <Image imgUrl={imgUrl} targets={targets} setTargets={setTargets} gameId={id} roomId={roomId} />
             </main>
         </>
     )

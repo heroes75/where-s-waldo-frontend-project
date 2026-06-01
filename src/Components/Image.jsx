@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "../Styles/styleImage.module.css";
+import socket from "../socket";
 
-export default function Image({ targets, imgUrl, setTargets, gameId }) {
+export default function Image({ targets, imgUrl, setTargets, gameId, roomId }) {
     const [scale, setScale] = useState(1);
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [prevCursorScrollPosition, setPrevCursorScrollPosition] = useState({
@@ -199,6 +200,7 @@ export default function Image({ targets, imgUrl, setTargets, gameId }) {
                         }),
                     );
             });
+        if(roomId) socket.emit(roomId, 'try something')
     }
 
     function handleReset() {

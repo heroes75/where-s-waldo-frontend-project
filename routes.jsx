@@ -1,6 +1,7 @@
 import App from "./src/App";
 import Game from "./src/Components/Game";
 import GameOffline from "./src/Components/GameOffline";
+import GameOnline from "./src/Components/GameOnline";
 import Leadboard from "./src/Components/Leadboard";
 import Multiplayer from "./src/Components/Multiplayer";
 
@@ -24,6 +25,10 @@ const routes = [
     {
         element: <Multiplayer />,
         path: '/multiplayer'
+    },
+    {
+        element: <GameOnline />,
+        path: '/multiplayer/:roomId/:id'
     }
 ]
 
