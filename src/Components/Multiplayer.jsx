@@ -24,6 +24,7 @@ export default function Multiplayer() {
                 setNextGame(obj.nextGame)
             }
         }
+
         socket.connect()
         // socket.emit('multiplayer', falseId)
         // socket.on('connect', show)

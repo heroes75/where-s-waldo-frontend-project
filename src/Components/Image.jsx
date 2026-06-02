@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "../Styles/styleImage.module.css";
 import socket from "../socket";
 
-export default function Image({ targets, imgUrl, setTargets, gameId, roomId }) {
+export default function Image({ targets, imgUrl, setTargets, gameId, roomId, sendToRoom }) {
     const [scale, setScale] = useState(1);
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [prevCursorScrollPosition, setPrevCursorScrollPosition] = useState({
@@ -186,21 +186,22 @@ export default function Image({ targets, imgUrl, setTargets, gameId, roomId }) {
         })
             .then((res) => res.json())
             .then((res) => {
-                    setTargets(
-                        targets.map((target) => {
-                            if (target.id === +e.target.dataset.id) {
-                                if (res.isHitTarget) {
-                                    setOupout(`${target.name} Found`);
-                                    target.found = true;
-                                } else {
-                                    setOupout(`${target.name} Is Not Here`);
-                                }
+                sendToRoom()
+                setTargets(
+                    targets.map((target) => {
+                        if (target.id === +e.target.dataset.id) {
+                            if (res.isHitTarget) {
+                                setOupout(`${target.name} Found`);
+                                target.found = true;
+                            } else {
+                                setOupout(`${target.name} Is Not Here`);
                             }
-                            return target;
-                        }),
-                    );
+                        }
+                        return target;
+                    }),
+                );
             });
-        if(roomId) socket.emit(roomId, 'try something')
+        // if(roomId) socket.emit(roomId, 'try something')
     }
 
     function handleReset() {

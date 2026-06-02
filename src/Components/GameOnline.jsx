@@ -3,7 +3,8 @@ import Header from "./Header";
 import Image from "./Image";
 import styles from '../Styles/Game.module.css'
 import { useNavigate, useParams } from "react-router";
-import socket from "../socket";
+import socket, { socketMultiplayer } from "../socket";
+import Peer from "peerjs";
 
 
 export default function GameOnline() {
@@ -19,6 +20,39 @@ export default function GameOnline() {
     const {id, roomId} = useParams()
     const navigate = useNavigate()
 
+
+    useEffect(() => {
+        socketMultiplayer.connect()
+        const peer = new Peer()
+
+        function joinRoom(roomId, id) {
+            socketMultiplayer.emit('join-room', roomId, id)
+        }
+
+        function listenMultiplayer(msg) {
+            console.log('msg in multiplayer:', msg)
+        }
+
+        function listenRoomId(msg) {
+            console.log('msg in roomId:', msg)
+        }
+
+        peer.on('open', id => {
+            console.log('my peer id:', id);
+            socketMultiplayer.emit('multiplayer', id)
+            socketMultiplayer.emit(roomId, id)
+            socketMultiplayer.on('join-room', joinRoom(roomId, id))
+        })
+        socketMultiplayer.on(roomId, listenRoomId)
+        socketMultiplayer.on('multiplayer', listenMultiplayer)
+
+        return () => {
+            socketMultiplayer.off('join-room', joinRoom(roomId, id))
+            socketMultiplayer.off(roomId, listenMultiplayer)
+            socketMultiplayer.off('multiplayer', listenMultiplayer)
+            socketMultiplayer.disconnect()
+        }
+    }, [])
  
     useEffect(() => {
         const initialTime = Date.now()
@@ -50,8 +84,18 @@ export default function GameOnline() {
                 }))
             })
         console.log('roomId:', roomId)
-        socket.on(roomId, msg => console.log(msg))
+        socketMultiplayer.on(roomId, msg => console.log(msg))
+
+        return () => {
+            socket.off(roomId)
+        }
     }, [])
+
+    function sendToRoom() {
+        console.log('socketMultiplayer.emit:')
+        socketMultiplayer.emit('multiplayer', 'const x = 1')
+        socketMultiplayer.emit(roomId, 'const rommId = 111')
+    }
 
     function handleCancel() {
         setTargets(targets.map(target => {
@@ -101,7 +145,7 @@ export default function GameOnline() {
                     {targets.map(target => <li key={target.name} style={{outline: target.found ? '4px solid green' : '4px solid black'}} className={styles.li}><img className={styles.img} src={target.url} alt={target.name} style={{filter: target.found ? 'grayscale(95%) brightness(.6)' : 'blur(0px)'}} /></li>)}
                 </ul>
                 <div>{timeInSecond}</div>
-                <Image imgUrl={imgUrl} targets={targets} setTargets={setTargets} gameId={id} roomId={roomId} />
+                <Image imgUrl={imgUrl} targets={targets} setTargets={setTargets} gameId={id} roomId={roomId} sendToRoom={sendToRoom} />
             </main>
         </>
     )
