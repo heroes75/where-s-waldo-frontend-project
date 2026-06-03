@@ -8,6 +8,8 @@ import Peer from "peerjs";
 
 export default function GameOnline() {
     const [targets, setTargets] = useState([]);
+    const [isConnected, setIsConnected] = useState(false);
+    const [isOpponentConnected, setIsOpponentConnected] = useState(false);
     const [opponentTargets, setOpponentTargets] = useState([]);
     const [opponentOutput, setOpponentOutput] = useState("");
     const [time, setTime] = useState(0);
@@ -32,13 +34,14 @@ export default function GameOnline() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const initialTime = Date.now();
+            const initialTime = Date.now();
         const intervalId = setInterval(() => {
             const timeNow = (Date.now() - initialTime) / 100;
             setTime(timeNow);
         }, 100);
 
         console.log('isAllOpponentTargetFound:', isAllOpponentTargetFound)
+        console.log('!isOpponentConnected:', !isOpponentConnected)
         if (isAllFound || isAllOpponentTargetFound) {
             console.log(`All characters found`);
             clearInterval(intervalId);
@@ -46,9 +49,11 @@ export default function GameOnline() {
         }
 
         return () => clearInterval(intervalId);
-    }, [isAllFound, isAllOpponentTargetFound]);
+        
+    }, [isAllFound, isAllOpponentTargetFound, isOpponentConnected]);
 
     useEffect(() => {
+        dialog.current.close()
         fetch(`http://localhost:3000/game/${id}`)
             .then((res) => {
                 return res.json();
@@ -93,12 +98,34 @@ export default function GameOnline() {
             setOpponentTargets(targets);
         }
 
+        function onConnect() {
+            console.log('true:', true)
+            setIsConnected(true)
+            socketMultiplayer.emit(roomId + '-connect', true)
+        }
+
+        function onDisconnect() {
+            console.log('setIsConnected(false):')
+            setIsConnected(false)
+            socketMultiplayer.emit(roomId + '-connect', false)
+        }
+
+        function onOpponentConnect(isConnected) {
+            setIsOpponentConnected(isConnected)
+        }
+
         socketMultiplayer.on(roomId, listenRoomId);
+        socketMultiplayer.on('disconnect', onDisconnect);
+        socketMultiplayer.on('connect', onConnect);
         socketMultiplayer.on(roomId + "-target", initializeOpponentTargets);
+        socketMultiplayer.on(roomId + "-connect", onOpponentConnect);
 
         return () => {
             socketMultiplayer.off("join-room", joinRoom(roomId, id));
             socketMultiplayer.off(roomId, listenRoomId);
+            socketMultiplayer.off('disconnect', onDisconnect);
+            socketMultiplayer.off('connect', onConnect);
+            socketMultiplayer.off(roomId + "-connect", onOpponentConnect);
             socketMultiplayer.off(
                 roomId + "-target",
                 initializeOpponentTargets,
@@ -184,6 +211,7 @@ export default function GameOnline() {
                             />
                         </li>
                     ))}
+                    {isOpponentConnected ? 'blue your opponent is connected' : 'red your opponent is disconnected'}
                 </ul>
                 <div>{timeInSecond}</div>
                 <Image
