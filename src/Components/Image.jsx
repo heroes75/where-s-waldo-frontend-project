@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "../Styles/styleImage.module.css";
 import socket from "../socket";
 
-export default function Image({ targets, imgUrl, setTargets, gameId, roomId, sendToRoom }) {
+export default function Image({ targets, imgUrl, setTargets, gameId, roomId, sendToRoom, opponentOutput }) {
     const [scale, setScale] = useState(1);
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [prevCursorScrollPosition, setPrevCursorScrollPosition] = useState({
@@ -172,6 +172,8 @@ export default function Image({ targets, imgUrl, setTargets, gameId, roomId, sen
     }
 
     function handleSelect(e) {
+        const name = targets.filter(target => target.id === +e.target.dataset.id)[0].name
+        console.log('name:', name)
         setIsShowTargetingBox(false);
         fetch(`http://localhost:3000/game/${gameId}`, {
             method: "POST",
@@ -186,9 +188,7 @@ export default function Image({ targets, imgUrl, setTargets, gameId, roomId, sen
         })
             .then((res) => res.json())
             .then((res) => {
-                sendToRoom()
-                setTargets(
-                    targets.map((target) => {
+                const newTargets = targets.map((target) => {
                         if (target.id === +e.target.dataset.id) {
                             if (res.isHitTarget) {
                                 setOupout(`${target.name} Found`);
@@ -198,8 +198,9 @@ export default function Image({ targets, imgUrl, setTargets, gameId, roomId, sen
                             }
                         }
                         return target;
-                    }),
-                );
+                    })
+                sendToRoom(newTargets, res.isHitTarget, name)
+                setTargets(newTargets);
             });
         // if(roomId) socket.emit(roomId, 'try something')
     }
@@ -316,6 +317,7 @@ export default function Image({ targets, imgUrl, setTargets, gameId, roomId, sen
                         onMouseUp={handleMouseUp}
                         onDoubleClick={handleClick}
                     />
+                    <span>{opponentOutput}</span>
                 </div>
                 <button onClick={handleReset}>Reset view</button>
             </div>
