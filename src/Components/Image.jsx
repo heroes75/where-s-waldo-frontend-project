@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import styles from "../Styles/styleImage.module.css";
-import socket from "../socket";
 
 export default function Image({ targets, imgUrl, setTargets, gameId, roomId, sendToRoom, opponentOutput }) {
     const [scale, setScale] = useState(1);

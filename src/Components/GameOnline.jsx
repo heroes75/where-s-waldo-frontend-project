@@ -34,48 +34,6 @@ export default function GameOnline() {
     const navigate = useNavigate();
 
     useEffect(() => {
-            const initialTime = Date.now();
-        const intervalId = setInterval(() => {
-            const timeNow = (Date.now() - initialTime) / 100;
-            setTime(timeNow);
-        }, 100);
-
-        console.log('isAllOpponentTargetFound:', isAllOpponentTargetFound)
-        console.log('!isOpponentConnected:', !isOpponentConnected)
-        if (isAllFound || isAllOpponentTargetFound) {
-            console.log(`All characters found`);
-            clearInterval(intervalId);
-            dialog.current.showModal();
-        }
-
-        return () => clearInterval(intervalId);
-        
-    }, [isAllFound, isAllOpponentTargetFound, isOpponentConnected]);
-
-    useEffect(() => {
-        dialog.current.close()
-        fetch(`http://localhost:3000/game/${id}`)
-            .then((res) => {
-                return res.json();
-            })
-            .then((res) => {
-                console.log("res:", res);
-                const targets = res.game.names.map((name) => {
-                    name.found = false;
-                    return name;
-                });
-                setImageUrl(res.game.url);
-                socketMultiplayer.emit(roomId + "-target", targets);
-                setTargets(targets);
-            });
-        console.log("roomId:", roomId);
-
-        return () => {
-            socket.off(roomId);
-        };
-    }, []);
-
-    useEffect(() => {
         socketMultiplayer.connect();
         // const peer = new Peer()
 
@@ -94,23 +52,22 @@ export default function GameOnline() {
         }
 
         function initializeOpponentTargets(targets) {
-            console.log("targets:", targets);
+            console.log(" received opponent targets:", targets);
             setOpponentTargets(targets);
         }
 
         function onConnect() {
-            console.log('true:', true)
+            console.log('send status connection:', true)
             setIsConnected(true)
             socketMultiplayer.emit(roomId + '-connect', true)
         }
 
         function onDisconnect() {
-            console.log('setIsConnected(false):')
             setIsConnected(false)
-            socketMultiplayer.emit(roomId + '-connect', false)
         }
 
         function onOpponentConnect(isConnected) {
+            console.log('received status disconnection of opponent')
             setIsOpponentConnected(isConnected)
         }
 
@@ -132,7 +89,52 @@ export default function GameOnline() {
             );
             socketMultiplayer.disconnect();
         };
-    }, []);
+    }, [id, roomId]);
+
+    useEffect(() => {
+            const initialTime = Date.now();
+        const intervalId = setInterval(() => {
+            const timeNow = (Date.now() - initialTime) / 100;
+            setTime(timeNow);
+        }, 100);
+
+        console.log('isAllOpponentTargetFound:', isAllOpponentTargetFound)
+        console.log('!isOpponentConnected:', !isOpponentConnected)
+        if (isAllFound || isAllOpponentTargetFound) {
+            console.log(`All characters found`);
+            clearInterval(intervalId);
+            dialog.current.showModal();
+        }
+
+        return () => clearInterval(intervalId);
+        
+    }, [isAllFound, isAllOpponentTargetFound, isOpponentConnected]);
+
+    useEffect(() => {
+            console.log('isOpponentConnected:', isOpponentConnected)
+            fetch(`http://localhost:3000/game/${id}`)
+            .then((res) => {
+                return res.json();
+            })
+            .then((res) => {
+                console.log("res:", res);
+                const targets = res.game.names.map((name) => {
+                    name.found = false;
+                    return name;
+                });
+                setImageUrl(res.game.url);
+                socketMultiplayer.emit(roomId + "-target", targets);
+                setTargets(targets);
+            });
+        console.log("roomId:", roomId);
+
+        return () => {
+            socket.off(roomId);
+        };
+        
+    }, [isOpponentConnected, id, roomId]);
+
+    
 
     function sendToRoom(targets, isFound, name) {
         console.log("socketMultiplayer.emit:");
