@@ -111,7 +111,6 @@ export default function GameOnline() {
     }, [isAllFound, isAllOpponentTargetFound, isOpponentConnected]);
 
     useEffect(() => {
-            console.log('isOpponentConnected:', isOpponentConnected)
             fetch(`http://localhost:3000/game/${id}`)
             .then((res) => {
                 return res.json();
@@ -132,7 +131,12 @@ export default function GameOnline() {
             socket.off(roomId);
         };
         
-    }, [isOpponentConnected, id, roomId]);
+    }, [id, roomId]);
+
+    useEffect(() => {
+        socketMultiplayer.emit(roomId + '-target', targets)
+        socketMultiplayer.emit(roomId + '-connect', isConnected)
+    }, [isOpponentConnected, roomId])
 
     
 
