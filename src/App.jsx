@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react";
-import "./App.css";
+import styles from "./App.module.css";
 import Header from "./Components/Header";
 import socket from "./socket";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 function App() {
 	const [games, setGames] = useState([])
+	const navigate = useNavigate()
 
 	useEffect(() => {
-		// socket.connect()
-		// socket.on('connect', () => console.log('succeeded test'))
-		// socket.emit('multiplayer', 'something', () => console.log('succeeded test'))
-
 		fetch(`http://localhost:3000/game`,)
 			.then(res => res.json())
 			.then(res => {
@@ -22,14 +19,15 @@ function App() {
     return (
 		<>
 			<Header />
-			<main>
-				<div>
-					<ul>
-						{games.map(game => <Link key={game.id} to={`/game/${game.id}`}><img style={{width: '300px'}} src={game.url} alt="game-level" /></Link>)}
+			<main  className={styles.main}>
+				<div className={styles.gameContainer}>
+					<h2>Games:</h2>
+					<ul className={styles.ul}>
+						{games.map(game => <Link className={styles.a} key={game.id} to={`/game/${game.id}`}><img className={styles.img} src={game.url} alt="game-level" /></Link>)}
 					</ul>
 				</div>
-				<div>
-					<Link to='/multiplayer'>Multiplayer</Link>
+				<div className={styles.multiplayerBox}>
+					<button className={styles.button} onClick={() => navigate('/multiplayer')}>Multiplayer</button>
 				</div>
 			</main>
 		</>

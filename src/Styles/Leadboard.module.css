@@ -1,0 +1,38 @@
+.ul {
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+.main {
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    /* justify-content: center; */
+    /* align-items: center; */
+}
+
+.tableContainer {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+}
+
+.table {
+    width: 1250px;
+    justify-self: center;
+    align-self: center;
+}
+
+.tr th {
+    font-weight: 800;
+    font-size: 1.5rem;
+}
+
+.tr2 th {
+    padding: .3rem;
+}
+

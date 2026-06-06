@@ -1,0 +1,24 @@
+.header {
+    height: 75px;
+    background: linear-gradient(to right, #4e4376, #2b5876);;
+}
+
+.nav {
+    padding: 20px 80px;
+}
+
+.ul {
+    display: flex;
+    list-style: none;
+    justify-content: space-between;
+}
+
+.ul a {
+    text-decoration: none;
+    font-size: 32px;
+    color: brown;
+}
+
+.ul a:hover {
+    color: blue;
+}
