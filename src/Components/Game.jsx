@@ -10,6 +10,7 @@ export default function Game() {
     const [time, setTime] = useState(0)
     const [imgUrl, setImageUrl] = useState(null)
     const [name, setName] = useState('')
+    const [output, setOutput] = useState('')
     const dialog = useRef(null)
     const isAllFound = targets.length !==0 && targets.every(target => target.found === true)
     const timeDividedByTen = time /10
@@ -94,6 +95,7 @@ export default function Game() {
                         </p>
                     </form>
                 </dialog>
+                <output>{output}</output>
                 <ul className={styles.ul}>
                     {targets.map(target => <li key={target.name} style={{outline: target.found ? '4px solid green' : '4px solid black'}} className={styles.li}><img className={styles.img} src={target.url} alt={target.name} style={{filter: target.found ? 'grayscale(95%) brightness(.6)' : 'blur(0px)'}} /></li>)}
                 </ul>

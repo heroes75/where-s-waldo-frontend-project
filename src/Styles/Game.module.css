@@ -5,6 +5,8 @@
     flex-grow: 2;
     flex-direction: column;
     gap: 11px;
+    overflow: scroll;
+    padding: 25px;
 }
 
 .dialog {
