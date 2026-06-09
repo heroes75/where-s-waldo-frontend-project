@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import styles from "../Styles/styleImage.module.css";
 
-export default function Image({ targets, imgUrl, setTargets, gameId, roomId, sendToRoom, opponentOutput }) {
+export default function Image({ targets, imgUrl, setTargets, gameId, sendToRoom, showOutput, isOffline }) {
     const [scale, setScale] = useState(1);
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [prevCursorScrollPosition, setPrevCursorScrollPosition] = useState({
@@ -22,10 +22,9 @@ export default function Image({ targets, imgUrl, setTargets, gameId, roomId, sen
     const [isShowTargetingBox, setIsShowTargetingBox] = useState(false);
     const [onMove, setOnMove] = useState(false);
     const [isPressedCtrl, setIsPressedCtrl] = useState(false);
-    const [oupout, setOupout] = useState("");
     const img = useRef(null);
     const imgContainer = useRef(null);
-    const prevIsPressedCtrl = useRef();
+    // const prevIsPressedCtrl = useRef();
     const prevScale = useRef(1);
     // const targets = [
     //     { x: 84.855, y: 30.859, name: "Waldo", url: "" },
@@ -190,10 +189,10 @@ export default function Image({ targets, imgUrl, setTargets, gameId, roomId, sen
                 const newTargets = targets.map((target) => {
                         if (target.id === +e.target.dataset.id) {
                             if (res.isHitTarget) {
-                                setOupout(`${target.name} Found`);
+                                showOutput(`${target.name} Found`)
                                 target.found = true;
                             } else {
-                                setOupout(`${target.name} Is Not Here`);
+                                showOutput(`${target.name} Is Not Here`);
                             }
                         }
                         return target;
@@ -219,14 +218,12 @@ export default function Image({ targets, imgUrl, setTargets, gameId, roomId, sen
         setIsPressedCtrl(false);
         setOnMove(false);
         setIsShowTargetingBox(false);
-        setOupout("");
         prevScale.current = 1;
     }
 
     return (
         <>
             <div className={styles.gameSection}>
-                <output className={styles.oupout}>{oupout}</output>
                 <div
                     ref={imgContainer}
                     onMouseMove={handleMvtImage}
@@ -272,7 +269,7 @@ export default function Image({ targets, imgUrl, setTargets, gameId, roomId, sen
                         </ul>
                         {/* {targetingBox.x.toFixed(3)}:{targetingBox.y.toFixed(3)} */}
                     </div>
-                    <div
+                    {isOffline && <div
                         style={{
                             position: "absolute",
                             zIndex: 3,
@@ -284,7 +281,7 @@ export default function Image({ targets, imgUrl, setTargets, gameId, roomId, sen
                         {cursorPosition.x.toFixed(3) +
                             ":" +
                             cursorPosition.y.toFixed(3)}
-                    </div>
+                    </div>}
 
                     <img
                         ref={img}
@@ -316,9 +313,8 @@ export default function Image({ targets, imgUrl, setTargets, gameId, roomId, sen
                         onMouseUp={handleMouseUp}
                         onDoubleClick={handleClick}
                     />
-                    <span>{opponentOutput}</span>
                 </div>
-                <button onClick={handleReset}>Reset view</button>
+                <button className={styles.reset} onClick={handleReset}>Reset view</button>
             </div>
         </>
     );

@@ -12,6 +12,7 @@ export default function Game() {
     const [name, setName] = useState('')
     const [output, setOutput] = useState('')
     const dialog = useRef(null)
+    const outputElement = useRef(null)
     const isAllFound = targets.length !==0 && targets.every(target => target.found === true)
     const timeDividedByTen = time /10
     const timeInSecond = Math.round(timeDividedByTen * 10) / 10
@@ -51,6 +52,21 @@ export default function Game() {
             })
     }, [])
 
+    function showOutput(action) {
+        // outputElement.current.style = {transform: 'translateY(200px)', opacity: 1}
+        outputElement.current.style.transform = 'translateX(30px)'
+        outputElement.current.style.opacity = 1
+        // outputElement.current.classList.add('move')
+
+        console.log('outputElement.current:', outputElement.current)
+        setOutput(action)
+
+        setTimeout(() => {
+            outputElement.current.style.transform = 'translateX(-100px)'
+            outputElement.current.style.opacity = 0
+        }, 3000);
+    }
+
     function handleCancel() {
         setTargets(targets.map(target => {
             target.found = false;
@@ -80,27 +96,28 @@ export default function Game() {
             <Header />
             <main className={styles.main}>
                 <dialog className={styles.dialog} ref={dialog} id="dialog" >
-                    <p>
-                        {timeFormat} and {timeInSecond}
-                    </p>
+                    <h2>👍Congratulation you win👍</h2>
+                    <strong>
+                        time: {timeFormat}
+                    </strong>
                     <form>
                         <p>
                             <label htmlFor="username">Enter your username:</label>
                             <input value={name} onChange={e => setName(e.target.value)} type="text" name="username" id="username" />
                         </p>
                         <p>
-                            <button onClick={handleCancel} value='cancel' formmethod="dialog">Replay</button>
-                            <button onClick={GoHome}>Go to home</button>
-                            <button onClick={handleAddRecord} value='default'>Enter</button>
+                            <button className={styles.replay} onClick={handleCancel} value='cancel' formmethod="dialog">Replay</button>
+                            <button className={styles.home} onClick={GoHome}>Go to home</button>
+                            <button className={styles.enter} onClick={handleAddRecord} value='default'>Enter</button>
                         </p>
                     </form>
                 </dialog>
-                <output>{output}</output>
+                <output ref={outputElement} className={styles.output}>{output}</output>
                 <ul className={styles.ul}>
                     {targets.map(target => <li key={target.name} style={{outline: target.found ? '4px solid green' : '4px solid black'}} className={styles.li}><img className={styles.img} src={target.url} alt={target.name} style={{filter: target.found ? 'grayscale(95%) brightness(.6)' : 'blur(0px)'}} /></li>)}
                 </ul>
                 <div>{timeInSecond}</div>
-                <Image imgUrl={imgUrl} targets={targets} setTargets={setTargets} gameId={id} />
+                <Image imgUrl={imgUrl} sendToRoom={() => {}} targets={targets} setTargets={setTargets} gameId={id} showOutput={showOutput} />
             </main>
         </>
     )

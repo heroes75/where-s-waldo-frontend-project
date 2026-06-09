@@ -21,14 +21,14 @@
 }
 
 .img {
-    transform: rotateZ(20deg);
+    transform: rotateZ(45deg);
     width: 300px;
     transition: transform .5s;
     box-shadow: black 3px 5px;
 }
 
 .img:hover {
-    transform: rotateZ(-45deg) scale(1.05);
+    transform: rotateZ(0deg) scale(1.5);
 }
 
 .multiplayerBox {

@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import Header from "./Header";
 import Image from "./Image";
-import styles from "../Styles/Game.module.css";
+import ReiDance from '../assets/Rei Dance Back GIF.gif'
+import GiselleDance from '../assets/Dance Giselle GIF.gif'
+import help from '../assets/help_24dp.svg'
+import styles from "../Styles/GameOnline.module.css";
 import { useNavigate, useParams } from "react-router";
 import socket, { socketMultiplayer } from "../socket";
-import Peer from "peerjs";
 
 export default function GameOnline() {
     const [targets, setTargets] = useState([]);
@@ -12,8 +14,11 @@ export default function GameOnline() {
     const [isOpponentConnected, setIsOpponentConnected] = useState(false);
     const [opponentTargets, setOpponentTargets] = useState([]);
     const [opponentOutput, setOpponentOutput] = useState("");
+    const [output, setOutput] = useState("");
     const [time, setTime] = useState(0);
     const [imgUrl, setImageUrl] = useState(null);
+    const outputElement = useRef(null)
+    const opponentOutputElement = useRef(null)
     const dialog = useRef(null);
     const isAllFound =
         targets.length !== 0 &&
@@ -30,8 +35,22 @@ export default function GameOnline() {
         ":" +
         Math.round((timeInSecond % 60) * 10) / 10 +
         "s";
+    const colorPoint = isOpponentConnected ? 'green' : 'red'
     const { id, roomId } = useParams();
     const navigate = useNavigate();
+
+
+     function showOpponentOutput(action) {
+        opponentOutputElement.current.style.transform = 'translateX(-5px)'
+        opponentOutputElement.current.style.opacity = 1
+
+        setOpponentOutput(action)
+
+        setTimeout(() => {
+            opponentOutputElement.current.style.transform = 'translateX(30px)'
+            opponentOutputElement.current.style.opacity = 0
+        }, 3000);
+    }
 
     useEffect(() => {
         socketMultiplayer.connect();
@@ -43,7 +62,7 @@ export default function GameOnline() {
 
         function listenRoomId(targets, isFound, name) {
             setOpponentTargets(targets);
-            setOpponentOutput(
+            showOpponentOutput(
                 isFound
                     ? `Your opponent found ${name}`
                     : `Your opponent missed ${name}`,
@@ -141,10 +160,23 @@ export default function GameOnline() {
     
 
     function sendToRoom(targets, isFound, name) {
-        console.log("socketMultiplayer.emit:");
-        // socketMultiplayer.emit('multiplayer', 'const x = 1')
         socketMultiplayer.emit(roomId, targets, isFound, name);
     }
+
+    function showOutput(action) {
+        outputElement.current.style.transform = 'translateX(30px)'
+        outputElement.current.style.opacity = 1
+
+        console.log('outputElement.current:', outputElement.current)
+        setOutput(action)
+
+        setTimeout(() => {
+            outputElement.current.style.transform = 'translateX(-100px)'
+            outputElement.current.style.opacity = 0
+        }, 3000);
+    }
+
+   
 
     function GoHome() {
         navigate("/");
@@ -157,69 +189,85 @@ export default function GameOnline() {
             <main className={styles.main}>
                 <dialog className={styles.dialog} ref={dialog} id="dialog">
                     {isAllFound ? (
-                        <p>
-                            Congratulation you win you have beaten your opponent
-                            in {timeFormat}
-                        </p>
+                        <>
+                            <h2>👍👍👍Congratulation👍👍👍</h2>
+                            <p>
+                                <strong>you won in {timeFormat}</strong>
+                            </p>
+
+                            <img style={{width: '300px'}} src={ReiDance} alt="Rei dance" />
+                        </>
                     ) : isAllOpponentTargetFound ? (
-                        <p>you loose your opponent win in {timeFormat}</p>
+                        <>
+                            <h2>👎😂🤣SHAME ON YOU👎😂🤣</h2>
+                            <p><strong>you loose</strong>, your opponent win in {timeFormat}</p>
+                            <img src={GiselleDance} alt="Giselle Dance" style={{width: '300px'}} />
+                        </>
                     ) : (
                         <p>your opponent is disconnected</p>
                     )}
                     <p>
-                        <button onClick={GoHome}>Go to home</button>
+                        <button className={styles.home} onClick={GoHome}>Go to home</button>
                     </p>
                 </dialog>
-                <ul className={styles.ul}>
-                    {targets.map((target) => (
-                        <li
-                            key={target.name}
-                            style={{
-                                outline: target.found
-                                    ? "4px solid green"
-                                    : "4px solid black",
-                            }}
-                            className={styles.li}
-                        >
-                            <img
-                                className={styles.img}
-                                src={target.url}
-                                alt={target.name}
+                <output className={styles.output} ref={outputElement}>{output}</output>
+                <div className={styles.targets}>
+                    <span>Your targets</span>
+                    <ul className={styles.ul}>
+                        {targets.map((target) => (
+                            <li
+                                key={target.name}
                                 style={{
-                                    filter: target.found
-                                        ? "grayscale(95%) brightness(.6)"
-                                        : "blur(0px)",
+                                    outline: target.found
+                                        ? "4px solid green"
+                                        : "4px solid black",
                                 }}
-                            />
-                        </li>
-                    ))}
-                </ul>
-                <ul className={styles.ul}>
-                    {opponentTargets.map((target) => (
-                        <li
-                            key={target.name}
-                            style={{
-                                outline: target.found
-                                    ? "4px solid green"
-                                    : "4px solid black",
-                            }}
-                            className={styles.li}
-                        >
-                            <img
-                                className={styles.img}
-                                src={target.url}
-                                alt={target.name}
+                                className={styles.li}
+                            >
+                                <img
+                                    className={styles.img}
+                                    src={target.url}
+                                    alt={target.name}
+                                    style={{
+                                        filter: target.found
+                                            ? "grayscale(95%) brightness(.6)"
+                                            : "blur(0px)",
+                                    }}
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div className={styles.opponentTargets}>
+                    <span>Opponent's targets</span>
+                    <ul className={styles.ul}>
+                        {opponentTargets.map((target) => (
+                            <li
+                                key={target.name}
                                 style={{
-                                    filter: target.found
-                                        ? "grayscale(95%) brightness(.6)"
-                                        : "blur(0px)",
+                                    outline: target.found
+                                        ? "4px solid green"
+                                        : "4px solid black",
                                 }}
-                            />
-                        </li>
-                    ))}
-                    {isOpponentConnected ? 'blue your opponent is connected' : 'red your opponent is disconnected'}
-                </ul>
-                <div>{timeInSecond}</div>
+                                className={styles.li}
+                            >
+                                <img
+                                    className={styles.img}
+                                    src={target.url}
+                                    alt={target.name}
+                                    style={{
+                                        filter: target.found
+                                            ? "grayscale(95%) brightness(.6)"
+                                            : "blur(0px)",
+                                    }}
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                    <p className={styles.opponentConnection}><div style={{backgroundColor: colorPoint, boxShadow: `0 0 10px ${colorPoint}, 0 0 20px ${colorPoint}, 0 0 40px ${colorPoint}, 0 0 80px ${colorPoint}, 0 0 160px ${colorPoint}`}} className={styles.point}></div> {isOpponentConnected ? 'your opponent is connected' : 'your opponent is disconnected'}</p>
+                </div>
+                <output ref={opponentOutputElement} className={styles.opponentOutput}>{opponentOutput}</output>
+                <div className={styles.timeSection}><img src={help} alt="help" className={styles.help} /><span>{timeInSecond}</span></div>
                 <Image
                     imgUrl={imgUrl}
                     targets={targets}
@@ -228,6 +276,7 @@ export default function GameOnline() {
                     roomId={roomId}
                     sendToRoom={sendToRoom}
                     opponentOutput={opponentOutput}
+                    showOutput={showOutput}
                 />
             </main>
         </>

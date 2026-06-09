@@ -31,3 +31,11 @@
     display: flex;
     flex-direction: column;
 }
+
+.reset {
+    padding: 10px 15px;
+    background-color: red;
+    border-radius: 7px;
+    margin: 10px;
+
+}

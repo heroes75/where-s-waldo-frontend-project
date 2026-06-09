@@ -1,0 +1,136 @@
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 2;
+    flex-direction: column;
+    gap: 11px;
+    padding: 25px;
+    overflow: hidden;
+    position: relative;
+}
+
+.dialog {
+    position: fixed;
+    padding: 13px;
+    left: calc(50% - 208px);
+    top: calc(50% - 210.5px);
+    border: 5px solid blueviolet;
+}
+
+.dialog h2{
+    margin: 10px;
+}
+
+.dialog p {
+    margin: 4px;
+}
+
+.dialog label {
+    font-size: larger;
+}
+
+.dialog form {
+    border: 7px ridge red;
+}
+
+.dialog input {
+    font-size: 1.1rem;
+    margin: 7px;
+}
+
+.replay, .home, .enter {
+    padding: 10px;
+    font-weight: 700;
+    margin: 5px;
+    border-radius: 10px;
+}
+
+::backdrop {
+    backdrop-filter: blur(5px);
+}
+
+.img {
+    width: 50px;
+}
+
+.ul {
+    display: flex;
+    gap: 10px;
+    padding: 11px;
+    justify-content: center;
+}
+
+.li {
+    list-style: none;
+}
+
+.output {
+    padding: 10px;
+    background-color: greenyellow;
+    color: red;
+    border-radius: 10px;
+    max-width: 100px;
+    position: fixed;
+    top: 15%;
+    left: 5%;
+    z-index: 3;
+    transform: translateX(-100px);
+    opacity: 0;
+    transition: transform 1s, opacity 2s;
+}
+
+
+.opponentOutput {
+    padding: 5px;
+    background-color: greenyellow;
+    max-width: 100px;
+    color: red;
+    border-radius: 10px;
+    position: fixed;
+    top: 15%;
+    right: 5%;
+    z-index: 3;
+    transform: translateX(100px);
+    opacity: 0;
+    transition: transform 3s, opacity 3s;
+}
+
+.point {
+    display: inline-block;
+    width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 0;
+  filter: brightness(500%);
+  overflow: hidden;
+}
+
+.opponentConnection {
+    display: flex;
+    gap: 10px;
+    margin: 10px;
+    align-items: center;
+}
+
+.timeSection {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 3px;
+    position: relative;
+}
+
+.timeSection span {
+    margin: 5px;
+    min-width: 65px;
+}
+
+.timeSection:hover::before {
+    content: '1) double-click for display targets,2) scroll for zoom,3) click and maintain to move';
+    position: absolute;
+    top: -80px;
+    width: 250px;
+    color: aliceblue;
+    background-color: gray;
+}

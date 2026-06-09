@@ -5,14 +5,44 @@
     flex-grow: 2;
     flex-direction: column;
     gap: 11px;
-    overflow: scroll;
     padding: 25px;
+    position: relative;
 }
 
 .dialog {
-    position: absolute;
-    left: calc(50% - 170px);
-    top: calc(50% - 27.5px);
+    position: fixed;
+    padding: 13px;
+    left: calc(50% - 235px);
+    top: calc(50% - 88.5px);
+    border: 5px solid blueviolet;
+}
+
+.dialog h2{
+    margin: 10px;
+}
+
+.dialog p {
+    margin: 4px;
+}
+
+.dialog label {
+    font-size: larger;
+}
+
+.dialog form {
+    border: 7px ridge red;
+}
+
+.dialog input {
+    font-size: 1.1rem;
+    margin: 7px;
+}
+
+.replay, .home, .enter {
+    padding: 10px;
+    font-weight: 700;
+    margin: 5px;
+    border-radius: 10px;
 }
 
 ::backdrop {
@@ -32,3 +62,18 @@
 .li {
     list-style: none;
 }
+
+.output {
+    padding: 10px;
+    background-color: greenyellow;
+    color: red;
+    border-radius: 10px;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    transform: translateX(-100px);
+    opacity: 0;
+    transition: transform 1s, opacity 2s;
+}
+
+
