@@ -9,7 +9,7 @@ function App() {
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		fetch(`http://localhost:3000/game`,)
+		fetch(import.meta.env.VITE_API_URL +  `/game`,)
 			.then(res => res.json())
 			.then(res => {
 				setGames(res.games)

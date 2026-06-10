@@ -130,7 +130,7 @@ export default function GameOnline() {
     }, [isAllFound, isAllOpponentTargetFound, isOpponentConnected]);
 
     useEffect(() => {
-            fetch(`http://localhost:3000/game/${id}`)
+            fetch(`${import.meta.env.VITE_API_URL}/game/${id}`)
             .then((res) => {
                 return res.json();
             })

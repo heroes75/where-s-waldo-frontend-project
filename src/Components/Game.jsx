@@ -38,7 +38,7 @@ export default function Game() {
     }, [isAllFound])
 
     useEffect(() => {
-        fetch(`http://localhost:3000/game/${id}`)
+        fetch(`${import.meta.env.VITE_API_URL}/game/${id}`)
             .then(res => {
                 return res.json()
             })
@@ -79,8 +79,9 @@ export default function Game() {
         navigate('/')
     }
 
-    function handleAddRecord() {
-        fetch(`http://localhost:3000/leadboard/${id}`, {
+    function handleAddRecord(e) {
+        e.preventDefault()
+        fetch(`${import.meta.env.VITE_API_URL}/leadboard/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

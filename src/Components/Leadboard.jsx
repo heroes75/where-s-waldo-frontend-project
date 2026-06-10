@@ -9,7 +9,7 @@ export default function Leadboard() {
     const [isLoading, setIsLoading] = useState(true)
 
     useEffect(() => {
-        fetch('http://localhost:3000/leadboard')
+        fetch(import.meta.env.VITE_API_URL + '/leadboard')
             .then(res => res.json())
             .then(res => {
                 setRecords(res.records)

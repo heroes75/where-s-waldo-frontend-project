@@ -1,10 +1,10 @@
 import { io } from "socket.io-client";
 
-const socket = io('http://localhost:3000', {
+const socket = io(import.meta.env.VITE_API_URL, {
     autoConnect: false
 })
 
-export const socketMultiplayer = io('http://localhost:3000/multiplayer', {
+export const socketMultiplayer = io(import.meta.env.VITE_API_URL + '/multiplayer', {
     autoConnect: false
 })
 

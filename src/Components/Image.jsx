@@ -173,7 +173,7 @@ export default function Image({ targets, imgUrl, setTargets, gameId, sendToRoom,
         const name = targets.filter(target => target.id === +e.target.dataset.id)[0].name
         console.log('name:', name)
         setIsShowTargetingBox(false);
-        fetch(`http://localhost:3000/game/${gameId}`, {
+        fetch(`${import.meta.env.VITE_API_URL}/game/${gameId}`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
