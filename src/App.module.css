@@ -33,6 +33,7 @@
 
 .multiplayerBox {
     padding: 35px;
+    border: 3px solid gray;
 }
 
 .button {
@@ -58,6 +59,29 @@
     transform: translateX(-380px) translateY(-100px);
 }
 
+
+.instruction {
+    padding: 15px;
+}
+
+.instruction h2 {
+    margin: 7px 0;
+}
+
+.instruction ul {
+    padding: 20px;
+    margin: 0 0 0 30px;
+}
+.li {
+    font-family:  cursive, 'Courier New', Courier, monospace;
+    list-style: none;
+    text-align: start;
+}
+
+.multiplayerBox {
+
+}
+
 @media screen and (max-width: 1000px) {
     .img {
         width: 150px;
@@ -67,3 +91,4 @@
         padding: 75px 30px;
     }
 }
+

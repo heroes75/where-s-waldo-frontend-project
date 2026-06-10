@@ -68,12 +68,36 @@
     background-color: greenyellow;
     color: red;
     border-radius: 10px;
-    position: absolute;
-    top: 5%;
+    position: fixed;
+    z-index: 3;
+    top: 15%;
     left: 5%;
     transform: translateX(-100px);
     opacity: 0;
     transition: transform 1s, opacity 2s;
+}
+
+.timeSection {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 3px;
+    position: relative;
+    border: 2px solid blue;
+}
+
+.timeSection span {
+    margin: 5px;
+    min-width: 65px;
+}
+
+.timeSection:hover::before {
+    content: '1) double-click for display targets,2) scroll for zoom,3) click and maintain to move';
+    position: absolute;
+    top: -80px;
+    width: 250px;
+    color: aliceblue;
+    background-color: gray;
 }
 
 

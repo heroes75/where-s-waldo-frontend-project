@@ -11,8 +11,6 @@
     display: flex;
     flex-direction: column;
     gap: 15px;
-    /* justify-content: center; */
-    /* align-items: center; */
 }
 
 .tableContainer {
@@ -31,8 +29,14 @@
     font-weight: 800;
     font-size: 1.5rem;
 }
+.tr:nth-child(3) {
+    background-color: rgba(128, 128, 128, .1);
+}
 
 .tr2 th {
     padding: .3rem;
 }
 
+.tbody .tr2:nth-child(odd) {
+    background-color: gray;
+}

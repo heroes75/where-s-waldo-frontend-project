@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "./App.module.css";
 import Header from "./Components/Header";
-import socket from "./socket";
 import { Link, useNavigate } from "react-router";
 
 function App() {
@@ -14,7 +13,6 @@ function App() {
 			.then(res => {
 				setGames(res.games)
 			})
-		// return () => socket.disconnect()
 	}, [])
     return (
 		<>
@@ -28,6 +26,15 @@ function App() {
 				</div>
 				<div className={styles.multiplayerBox}>
 					<button className={styles.button} onClick={() => navigate('/multiplayer')}>Multiplayer</button>
+					<div className={styles.instruction}>
+						<h2>Multiplayer Working:</h2>
+						<ul>
+							<li className={styles.li}>You and your opponent receive the same Image</li>
+							<li className={styles.li}>Each action made by one will be see by the other</li>
+							<li className={styles.li}>Each players will see the state targets of others</li>
+						</ul>
+						
+					</div>
 				</div>
 			</main>
 		</>

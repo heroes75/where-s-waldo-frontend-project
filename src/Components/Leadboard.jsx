@@ -41,7 +41,7 @@ export default function Leadboard() {
                                 <th>time</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className={styles.tbody}>
                             {selectedRecord.records.map((record, index) => {
                                 return (
                                     <tr  className={styles.tr2} key={record.id}>

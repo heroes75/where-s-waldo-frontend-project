@@ -62,7 +62,7 @@ export default function Multiplayer() {
                     <span><strong>- you will be connected to new player.</strong></span>
                     <span><strong>- with more than 33 whole different levels.</strong></span>
                 </div>
-                <h2>you're connected on multiplayer lobby with {numbersOfPlayer} players</h2>
+                <h2>you're connected online with {numbersOfPlayer} players</h2>
                 <div className={styles.animation}>
                     <section>
                         <div className={styles.one}></div>

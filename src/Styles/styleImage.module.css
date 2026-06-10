@@ -8,12 +8,14 @@
     /* padding: 50px; */
     overflow: hidden;
     width: 90%;
+    border: 5px ridge red;
     /* transform-origin: top left; */
 }
 
 .imageTarget {
-    width: 50px;
+    width: 30px;
     border-radius: 50%;
+    border: 1px solid blue;
 }
 
 .li {

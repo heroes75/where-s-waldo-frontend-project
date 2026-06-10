@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import help from '../assets/help_24dp.svg'
 import Header from "./Header";
 import Image from "./Image";
 import styles from '../Styles/Game.module.css'
@@ -117,7 +118,7 @@ export default function Game() {
                 <ul className={styles.ul}>
                     {targets.map(target => <li key={target.name} style={{outline: target.found ? '4px solid green' : '4px solid black'}} className={styles.li}><img className={styles.img} src={target.url} alt={target.name} style={{filter: target.found ? 'grayscale(95%) brightness(.6)' : 'blur(0px)'}} /></li>)}
                 </ul>
-                <div>{timeInSecond}</div>
+                <div className={styles.timeSection}><img src={help} alt="help" className={styles.help} /><span>{timeInSecond}</span></div>
                 <Image imgUrl={imgUrl} sendToRoom={() => {}} targets={targets} setTargets={setTargets} gameId={id} showOutput={showOutput} />
             </main>
         </>

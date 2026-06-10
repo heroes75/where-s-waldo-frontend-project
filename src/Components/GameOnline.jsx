@@ -155,7 +155,7 @@ export default function GameOnline() {
     useEffect(() => {
         socketMultiplayer.emit(roomId + '-target', targets)
         socketMultiplayer.emit(roomId + '-connect', isConnected)
-    }, [isOpponentConnected, roomId])
+    }, [isOpponentConnected, roomId, isConnected])
 
     
 
