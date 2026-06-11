@@ -56,9 +56,9 @@ export default function GameOnline() {
         socketMultiplayer.connect();
         // const peer = new Peer()
 
-        // function joinRoom(roomId, id) {
-        //     socketMultiplayer.emit("join-room", roomId, id);
-        // }
+        function joinRoom(roomId, id) {
+            socketMultiplayer.emit("join-room", roomId, id);
+        }
 
         function listenRoomId(targets, isFound, name) {
             setOpponentTargets(targets);
@@ -77,6 +77,7 @@ export default function GameOnline() {
 
         function onConnect() {
             console.log('send status connection:', true)
+            joinRoom(roomId, 10)
             setIsConnected(true)
             socketMultiplayer.emit(roomId + '-connect', true)
         }
