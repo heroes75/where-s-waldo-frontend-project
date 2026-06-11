@@ -7,7 +7,8 @@ const socket = io(import.meta.env.VITE_API_URL, {
 export const socketMultiplayer = io(import.meta.env.VITE_API_URL + '/multiplayer', {
     autoConnect: false,
     transports: ['websocket'],
-    upgrade: false
+    upgrade: false,
+    forceNew: true, 
 })
 
 export default socket
