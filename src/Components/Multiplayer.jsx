@@ -63,8 +63,8 @@ export default function Multiplayer() {
                 <h2 className={styles.h2}>{isWaiting}</h2>
                 <div className="indication">
                     <p>
-                        if you are reading that's you're not connected
-                        but if you're boring you can always duplicate this table
+                        if you are reading it that's mean you're not connected to a player
+                        but if you're feeling alone you can always duplicate this table
                         to play against yourself.
                     </p>
                 </div>
