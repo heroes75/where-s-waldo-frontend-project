@@ -9,7 +9,6 @@ describe("Header", () => {
 		render(<MemoryRouter>
 			<Header />
 		</MemoryRouter>)
-        // render(<Header />);
         const header = screen.getByRole("banner");
         const nav = screen.getByRole("navigation");
         const ul = screen.getByRole("list");

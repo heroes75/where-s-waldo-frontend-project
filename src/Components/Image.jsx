@@ -24,58 +24,31 @@ export default function Image({ targets, imgUrl, setTargets, gameId, sendToRoom,
     const [isPressedCtrl, setIsPressedCtrl] = useState(false);
     const img = useRef(null);
     const imgContainer = useRef(null);
-    // const prevIsPressedCtrl = useRef();
     const prevScale = useRef(1);
-    // const targets = [
-    //     { x: 84.855, y: 30.859, name: "Waldo", url: "" },
-    //     { x: 3, y: 3, name: "emmanuel", url: "" },
-    // ];
 
     function HandlePosition(e) {
         const rect = e.target.getBoundingClientRect();
         const rectImage = img.current.getBoundingClientRect();
         const rectImageContainer = imgContainer.current.getBoundingClientRect();
-        // console.log('rect.top:', rect.top)
-        // console.log('rect.height:', rect.height)
-        // console.log('rect.right:', rect.right)
-        console.log("e.clientX:", e.clientX);
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
         const xImg =
             ((rectImage.x - rectImageContainer.x) / rectImage.width) * 100;
         const yImg =
             ((rectImage.y - rectImageContainer.y) / rectImage.height) * 100;
-        console.log("xImg: in handle position", xImg);
-        console.log("yImg: in handle position", yImg);
         setClientPosition({ x: (x + xImg) * scale, y: (y + yImg) * scale });
 
-        console.log("{x, y}:", { x, y });
-        console.log("prevCursorTranslation", prevCursorTranslatePosition);
-        // setClientPosition({x: (e.clientX / rect.width) * 100, y: (e.clientY / rect.height) * 100})
         setCursorPosition({ x, y });
         setOnMove(true);
-        // setIsPressedCtrl(prev => {
-        //     prevIsPressedCtrl.current = prev
-        //     return e.ctrlKey
-        // })
-
-        // console.log("e.pageX", e.pageX, "e.pageY", e.pageY);
     }
 
     function handleZoom(e) {
-        // e.preventDefault()
         setOnMove(false);
-        // console.log('e.deltaY:', e.deltaY)
-        // console.log('scale', scale)
-        // console.log('cursorPosition', cursorPosition)
-        // console.log('prevTranslateCursorPosition', prevCursorTranslatePosition)
         setPrevCursorScrollPosition({
             x: cursorPosition.x,
             y: cursorPosition.y,
         });
-        // console.log('prevScale:', prevScale.current)
         setScale((prev) => {
-            // console.log('prev:', prev)
             const newScale = Math.min(
                 Math.max(prev + e.deltaY * -0.01 * prevScale.current, 1),
                 8,
@@ -88,49 +61,22 @@ export default function Image({ targets, imgUrl, setTargets, gameId, sendToRoom,
                 x: prev.x / newScale,
                 y: prev.y / newScale,
             }));
-            // console.log('newScale:', newScale)
             return newScale;
         });
     }
 
     function handleMvtImage(e) {
         const rect = e.target.getBoundingClientRect();
-        const rectImage = img.current.getBoundingClientRect();
-        const rectImageContainer = imgContainer.current.getBoundingClientRect();
-        // console.log('rectImage.x - rect.x', rectImage.x - rect.x)
-        // console.log('rect.x:', rect.x)
-        // console.log('rectImage.x - rectImgContainer.x', rectImage.x - rectImageContainer.x)
-        // console.log('rectImage.y - rectImgContainer.y', rectImage.y - rectImageContainer.y)
-        // console.log('rect.width: on imageContainer', rect.width)
-        // console.log('e.clientX: on imageContainer', e.clientX)
         const x = (e.clientX / rect.width) * 100;
-        const xImg =
-            ((e.clientX - (rectImage.x - rectImageContainer.x)) /
-                rectImage.width) *
-            100;
-        // console.log('xImg:', xImg)
-        const yImg =
-            ((e.clientY - (rectImage.top - rectImageContainer.top)) /
-                rectImage.height) *
-            100;
-        // console.log('yImg:', yImg)
         const y = (e.clientY / rect.height) * 100;
         setMvt({ x, y });
-        // setClientPosition({x: xImg, y: yImg})
         console.log("x: e.clientX, y: e.clientY:", x, y);
-        // console.log('x: e.Img, y: e.Img:', xImg, yImg)
         if (isPressedCtrl) {
-            // console.log('x - startTranslatePosition.x:', x - startTranslatePosition.x)
-            // console.log('y - startTranslatePosition.y:', y - startTranslatePosition.y)
-            // console.log('scale', scale)
             setVectorTranslation({
                 x: x - startTranslatePosition.x,
                 y: y - startTranslatePosition.y,
             });
         }
-        // else {
-        //     setStartTranslatePosition({x:0, y:0})
-        // }
     }
 
     function handleMouseDown(e) {
@@ -158,8 +104,6 @@ export default function Image({ targets, imgUrl, setTargets, gameId, sendToRoom,
             x: vectorTranslation.x,
             y: vectorTranslation.y,
         });
-        // console.log('mvt.y - startTranslatePosition.y:', mvt.y - startTranslatePosition.y)
-        // console.log('mvt.x - startTranslatePosition.x:', mvt.x - startTranslatePosition.x)
     }
 
     function handleClick() {
@@ -200,7 +144,6 @@ export default function Image({ targets, imgUrl, setTargets, gameId, sendToRoom,
                 sendToRoom(newTargets, res.isHitTarget, name)
                 setTargets(newTargets);
             });
-        // if(roomId) socket.emit(roomId, 'try something')
     }
 
     function handleReset() {

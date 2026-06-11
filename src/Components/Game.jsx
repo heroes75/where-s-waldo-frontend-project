@@ -30,7 +30,6 @@ export default function Game() {
         }, 100);
 
         if(isAllFound) {
-            console.log(`All characters found`)
             clearInterval(intervalId)
             dialog.current.showModal()
         }
@@ -44,7 +43,6 @@ export default function Game() {
                 return res.json()
             })
             .then(res => {
-                console.log('res:', res)
                 setImageUrl(res.game.url)
                 setTargets(res.game.names.map(name => {
                     name.found = false
@@ -54,12 +52,9 @@ export default function Game() {
     }, [])
 
     function showOutput(action) {
-        // outputElement.current.style = {transform: 'translateY(200px)', opacity: 1}
         outputElement.current.style.transform = 'translateX(30px)'
         outputElement.current.style.opacity = 1
-        // outputElement.current.classList.add('move')
 
-        console.log('outputElement.current:', outputElement.current)
         setOutput(action)
 
         setTimeout(() => {

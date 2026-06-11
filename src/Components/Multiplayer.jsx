@@ -11,12 +11,6 @@ export default function Multiplayer() {
     const navigate = useNavigate()
     
     useEffect(() => {
-        // socket.on('multiplayer', (arg, callback) => {
-        const falseId = Math.floor(Math.random() * 10000)
-            console.log('falseId:', falseId)
-            console.log('you\'re connected');
-
-        // })
         function show(obj) {
             console.log('obj.msg:', obj.msg)
             console.log('obj.id:', obj.id)
@@ -28,13 +22,10 @@ export default function Multiplayer() {
         }
 
         function displayPlayer(msg) {
-            console.log('msg:', msg)
             setNumbersOfPlayer(msg)
         }
 
         socket.connect()
-        // socket.emit('multiplayer', falseId)
-        // socket.on('connect', show)
         socket.on('lobby', show)
         socket.on('players', displayPlayer)
         
@@ -43,7 +34,6 @@ export default function Multiplayer() {
             socket.off('players', displayPlayer)
             socket.disconnect()
         }
-        // socket.connect()
     }, [nextGame])
 
     useEffect(() => {

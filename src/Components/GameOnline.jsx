@@ -54,7 +54,6 @@ export default function GameOnline() {
 
     useEffect(() => {
         socketMultiplayer.connect();
-        // const peer = new Peer()
 
         function joinRoom(roomId) {
             socketMultiplayer.emit("join-room", roomId);
@@ -67,16 +66,13 @@ export default function GameOnline() {
                     ? `Your opponent found ${name}`
                     : `Your opponent missed ${name}`,
             );
-            console.log("msg in roomId:", targets, isFound, name);
         }
 
         function initializeOpponentTargets(targets) {
-            console.log(" received opponent targets:", targets);
             setOpponentTargets(targets);
         }
 
         function onConnect() {
-            console.log('send status connection:', true)
             joinRoom(roomId)
             setIsConnected(true)
             socketMultiplayer.emit(roomId + '-connect', true)
@@ -87,7 +83,6 @@ export default function GameOnline() {
         }
 
         function onOpponentConnect(isConnected) {
-            console.log('received status disconnection of opponent')
             setIsOpponentConnected(isConnected)
         }
 
@@ -118,8 +113,6 @@ export default function GameOnline() {
             setTime(timeNow);
         }, 100);
 
-        console.log('isAllOpponentTargetFound:', isAllOpponentTargetFound)
-        console.log('!isOpponentConnected:', !isOpponentConnected)
         if (isAllFound || isAllOpponentTargetFound) {
             console.log(`All characters found`);
             clearInterval(intervalId);
@@ -168,7 +161,6 @@ export default function GameOnline() {
         outputElement.current.style.transform = 'translateX(30px)'
         outputElement.current.style.opacity = 1
 
-        console.log('outputElement.current:', outputElement.current)
         setOutput(action)
 
         setTimeout(() => {
