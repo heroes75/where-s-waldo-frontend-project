@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react"
 import { useEffect, useState } from "react";
 import styles from "./App.module.css";
 import Header from "./Components/Header";
@@ -37,6 +38,7 @@ function App() {
 					</div>
 				</div>
 			</main>
+			<Analytics />
 		</>
 	);
 }
