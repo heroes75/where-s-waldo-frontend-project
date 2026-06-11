@@ -56,9 +56,9 @@ export default function GameOnline() {
         socketMultiplayer.connect();
         // const peer = new Peer()
 
-        function joinRoom(roomId, id) {
-            socketMultiplayer.emit("join-room", roomId, id);
-        }
+        // function joinRoom(roomId, id) {
+        //     socketMultiplayer.emit("join-room", roomId, id);
+        // }
 
         function listenRoomId(targets, isFound, name) {
             setOpponentTargets(targets);
@@ -97,7 +97,7 @@ export default function GameOnline() {
         socketMultiplayer.on(roomId + "-connect", onOpponentConnect);
 
         return () => {
-            socketMultiplayer.off("join-room", joinRoom(roomId, id));
+            socketMultiplayer.off("join-room");
             socketMultiplayer.off(roomId, listenRoomId);
             socketMultiplayer.off('disconnect', onDisconnect);
             socketMultiplayer.off('connect', onConnect);
