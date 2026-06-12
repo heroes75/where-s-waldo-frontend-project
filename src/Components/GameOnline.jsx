@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import Header from "./Header";
 import Image from "./Image";
-import ReiDance from '../assets/Rei Dance Back GIF.gif'
-import GiselleDance from '../assets/Dance Giselle GIF.gif'
-import help from '../assets/help_24dp.svg'
+import ReiDance from "../assets/Rei Dance Back GIF.gif";
+import GiselleDance from "../assets/Dance Giselle GIF.gif";
+import help from "../assets/help_24dp.svg";
 import styles from "../Styles/GameOnline.module.css";
 import { useNavigate, useParams } from "react-router";
 import socket, { socketMultiplayer } from "../socket";
@@ -17,8 +17,8 @@ export default function GameOnline() {
     const [output, setOutput] = useState("");
     const [time, setTime] = useState(0);
     const [imgUrl, setImageUrl] = useState(null);
-    const outputElement = useRef(null)
-    const opponentOutputElement = useRef(null)
+    const outputElement = useRef(null);
+    const opponentOutputElement = useRef(null);
     const dialog = useRef(null);
     const isAllFound =
         targets.length !== 0 &&
@@ -35,20 +35,19 @@ export default function GameOnline() {
         ":" +
         Math.round((timeInSecond % 60) * 10) / 10 +
         "s";
-    const colorPoint = isOpponentConnected ? 'green' : 'red'
+    const colorPoint = isOpponentConnected ? "green" : "red";
     const { id, roomId } = useParams();
     const navigate = useNavigate();
 
+    function showOpponentOutput(action) {
+        opponentOutputElement.current.style.transform = "translateX(-5px)";
+        opponentOutputElement.current.style.opacity = 1;
 
-     function showOpponentOutput(action) {
-        opponentOutputElement.current.style.transform = 'translateX(-5px)'
-        opponentOutputElement.current.style.opacity = 1
-
-        setOpponentOutput(action)
+        setOpponentOutput(action);
 
         setTimeout(() => {
-            opponentOutputElement.current.style.transform = 'translateX(30px)'
-            opponentOutputElement.current.style.opacity = 0
+            opponentOutputElement.current.style.transform = "translateX(30px)";
+            opponentOutputElement.current.style.opacity = 0;
         }, 3000);
     }
 
@@ -73,30 +72,30 @@ export default function GameOnline() {
         }
 
         function onConnect() {
-            joinRoom(roomId)
-            setIsConnected(true)
-            socketMultiplayer.emit(roomId + '-connect', true)
+            joinRoom(roomId);
+            setIsConnected(true);
+            socketMultiplayer.emit(roomId + "-connect", true);
         }
 
         function onDisconnect() {
-            setIsConnected(false)
+            setIsConnected(false);
         }
 
         function onOpponentConnect(isConnected) {
-            setIsOpponentConnected(isConnected)
+            setIsOpponentConnected(isConnected);
         }
 
         socketMultiplayer.on(roomId, listenRoomId);
-        socketMultiplayer.on('disconnect', onDisconnect);
-        socketMultiplayer.on('connect', onConnect);
+        socketMultiplayer.on("disconnect", onDisconnect);
+        socketMultiplayer.on("connect", onConnect);
         socketMultiplayer.on(roomId + "-target", initializeOpponentTargets);
         socketMultiplayer.on(roomId + "-connect", onOpponentConnect);
 
         return () => {
             socketMultiplayer.off("join-room");
             socketMultiplayer.off(roomId, listenRoomId);
-            socketMultiplayer.off('disconnect', onDisconnect);
-            socketMultiplayer.off('connect', onConnect);
+            socketMultiplayer.off("disconnect", onDisconnect);
+            socketMultiplayer.off("connect", onConnect);
             socketMultiplayer.off(roomId + "-connect", onOpponentConnect);
             socketMultiplayer.off(
                 roomId + "-target",
@@ -107,29 +106,26 @@ export default function GameOnline() {
     }, [id, roomId]);
 
     useEffect(() => {
-            const initialTime = Date.now();
+        const initialTime = Date.now();
         const intervalId = setInterval(() => {
             const timeNow = (Date.now() - initialTime) / 100;
             setTime(timeNow);
         }, 100);
 
         if (isAllFound || isAllOpponentTargetFound) {
-            console.log(`All characters found`);
             clearInterval(intervalId);
             dialog.current.showModal();
         }
 
         return () => clearInterval(intervalId);
-        
     }, [isAllFound, isAllOpponentTargetFound, isOpponentConnected]);
 
     useEffect(() => {
-            fetch(`${import.meta.env.VITE_API_URL}/game/${id}`)
+        fetch(`${import.meta.env.VITE_API_URL}/game/${id}`)
             .then((res) => {
                 return res.json();
             })
             .then((res) => {
-                console.log("res:", res);
                 const targets = res.game.names.map((name) => {
                     name.found = false;
                     return name;
@@ -138,43 +134,36 @@ export default function GameOnline() {
                 socketMultiplayer.emit(roomId + "-target", targets);
                 setTargets(targets);
             });
-        console.log("roomId:", roomId);
 
         return () => {
             socket.off(roomId);
         };
-        
     }, [id, roomId]);
 
     useEffect(() => {
-        socketMultiplayer.emit(roomId + '-target', targets)
-        socketMultiplayer.emit(roomId + '-connect', isConnected)
-    }, [isOpponentConnected, roomId, isConnected])
-
-    
+        socketMultiplayer.emit(roomId + "-target", targets);
+        socketMultiplayer.emit(roomId + "-connect", isConnected);
+    }, [isOpponentConnected, roomId, isConnected]);
 
     function sendToRoom(targets, isFound, name) {
         socketMultiplayer.emit(roomId, targets, isFound, name);
     }
 
     function showOutput(action) {
-        outputElement.current.style.transform = 'translateX(30px)'
-        outputElement.current.style.opacity = 1
+        outputElement.current.style.transform = "translateX(30px)";
+        outputElement.current.style.opacity = 1;
 
-        setOutput(action)
+        setOutput(action);
 
         setTimeout(() => {
-            outputElement.current.style.transform = 'translateX(-100px)'
-            outputElement.current.style.opacity = 0
+            outputElement.current.style.transform = "translateX(-100px)";
+            outputElement.current.style.opacity = 0;
         }, 3000);
     }
-
-   
 
     function GoHome() {
         navigate("/");
     }
-
 
     return (
         <>
@@ -188,22 +177,37 @@ export default function GameOnline() {
                                 <strong>you won in {timeFormat}</strong>
                             </p>
 
-                            <img style={{width: '300px'}} src={ReiDance} alt="Rei dance" />
+                            <img
+                                style={{ width: "300px" }}
+                                src={ReiDance}
+                                alt="Rei dance"
+                            />
                         </>
                     ) : isAllOpponentTargetFound ? (
                         <>
                             <h2>👎😂🤣SHAME ON YOU👎😂🤣</h2>
-                            <p><strong>you loose</strong>, your opponent win in {timeFormat}</p>
-                            <img src={GiselleDance} alt="Giselle Dance" style={{width: '300px'}} />
+                            <p>
+                                <strong>you loose</strong>, your opponent win in{" "}
+                                {timeFormat}
+                            </p>
+                            <img
+                                src={GiselleDance}
+                                alt="Giselle Dance"
+                                style={{ width: "300px" }}
+                            />
                         </>
                     ) : (
                         <p>your opponent is disconnected</p>
                     )}
                     <p>
-                        <button className={styles.home} onClick={GoHome}>Go to home</button>
+                        <button className={styles.home} onClick={GoHome}>
+                            Go to home
+                        </button>
                     </p>
                 </dialog>
-                <output className={styles.output} ref={outputElement}>{output}</output>
+                <output className={styles.output} ref={outputElement}>
+                    {output}
+                </output>
                 <div className={styles.targets}>
                     <span>Your targets</span>
                     <ul className={styles.ul}>
@@ -257,10 +261,29 @@ export default function GameOnline() {
                             </li>
                         ))}
                     </ul>
-                    <p className={styles.opponentConnection}><div style={{backgroundColor: colorPoint, boxShadow: `0 0 10px ${colorPoint}, 0 0 20px ${colorPoint}, 0 0 40px ${colorPoint}, 0 0 80px ${colorPoint}, 0 0 160px ${colorPoint}`}} className={styles.point}></div> {isOpponentConnected ? 'your opponent is connected' : 'your opponent is disconnected'}</p>
+                    <div className={styles.opponentConnection}>
+                        <div
+                            style={{
+                                backgroundColor: colorPoint,
+                                boxShadow: `0 0 10px ${colorPoint}, 0 0 20px ${colorPoint}, 0 0 40px ${colorPoint}, 0 0 80px ${colorPoint}, 0 0 160px ${colorPoint}`,
+                            }}
+                            className={styles.point}
+                        ></div>{" "}
+                        {isOpponentConnected
+                            ? "your opponent is connected"
+                            : "your opponent is disconnected"}
+                    </div>
                 </div>
-                <output ref={opponentOutputElement} className={styles.opponentOutput}>{opponentOutput}</output>
-                <div className={styles.timeSection}><img src={help} alt="help" className={styles.help} /><span>{timeInSecond}</span></div>
+                <output
+                    ref={opponentOutputElement}
+                    className={styles.opponentOutput}
+                >
+                    {opponentOutput}
+                </output>
+                <div className={styles.timeSection}>
+                    <img src={help} alt="help" className={styles.help} />
+                    <span>{timeInSecond}</span>
+                </div>
                 <Image
                     imgUrl={imgUrl}
                     targets={targets}

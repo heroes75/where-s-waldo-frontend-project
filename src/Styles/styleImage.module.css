@@ -25,6 +25,7 @@
     padding: 5px;
     gap: 7px;
     border-bottom: 2px dashed blue;
+    cursor: pointer;
 }
 
 .ul {
@@ -39,5 +40,4 @@
     background-color: red;
     border-radius: 7px;
     margin: 10px;
-
 }

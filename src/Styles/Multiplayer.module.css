@@ -8,20 +8,19 @@
 }
 
 @keyframes hide {
-
 }
 
 .animation {
-  display: flex;
-  /* min-height: 300px; */
-  padding: 100px  50px 0 5px;
-  justify-content: center;
-  align-items: end;
+    display: flex;
+    /* min-height: 300px; */
+    padding: 100px 50px 0 5px;
+    justify-content: center;
+    align-items: end;
 }
 
 .animation section {
     display: flex;
-  gap: 16px;
+    gap: 16px;
     height: 50%;
 }
 

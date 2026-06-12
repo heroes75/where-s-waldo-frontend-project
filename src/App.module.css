@@ -23,7 +23,7 @@
 .img {
     transform: rotateZ(45deg);
     width: 300px;
-    transition: transform .5s;
+    transition: transform 0.5s;
     box-shadow: black 3px 5px;
 }
 
@@ -36,10 +36,14 @@
     border: 3px solid gray;
 }
 
+.multiplayerBox h2 {
+    margin: 0 0 20px 0;
+}
+
 .button {
     padding: 20px 40px;
     font-size: 3rem;
-    background-color: #1877F2;
+    background-color: #1877f2;
     border-radius: 10px;
     box-shadow: black 3px 5px;
 }
@@ -59,7 +63,6 @@
     transform: translateX(-380px) translateY(-100px);
 }
 
-
 .instruction {
     padding: 15px;
 }
@@ -73,7 +76,7 @@
     margin: 0 0 0 30px;
 }
 .li {
-    font-family:  cursive, 'Courier New', Courier, monospace;
+    font-family: cursive, "Courier New", Courier, monospace;
     list-style: none;
     text-align: start;
 }
@@ -82,9 +85,8 @@
     .img {
         width: 150px;
     }
-    
+
     .ul {
         padding: 75px 30px;
     }
 }
-

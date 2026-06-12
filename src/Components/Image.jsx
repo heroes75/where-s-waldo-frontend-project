@@ -1,7 +1,15 @@
 import { useRef, useState } from "react";
 import styles from "../Styles/styleImage.module.css";
 
-export default function Image({ targets, imgUrl, setTargets, gameId, sendToRoom, showOutput, isOffline }) {
+export default function Image({
+    targets,
+    imgUrl,
+    setTargets,
+    gameId,
+    sendToRoom,
+    showOutput,
+    isOffline,
+}) {
     const [scale, setScale] = useState(1);
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const [prevCursorScrollPosition, setPrevCursorScrollPosition] = useState({
@@ -70,7 +78,6 @@ export default function Image({ targets, imgUrl, setTargets, gameId, sendToRoom,
         const x = (e.clientX / rect.width) * 100;
         const y = (e.clientY / rect.height) * 100;
         setMvt({ x, y });
-        console.log("x: e.clientX, y: e.clientY:", x, y);
         if (isPressedCtrl) {
             setVectorTranslation({
                 x: x - startTranslatePosition.x,
@@ -83,22 +90,15 @@ export default function Image({ targets, imgUrl, setTargets, gameId, sendToRoom,
         e.preventDefault();
         setIsPressedCtrl(true);
         setIsShowTargetingBox(false);
-        console.log("MOUSE DOWN");
-        console.log("scale", scale);
+
         prevScale.current = scale;
         setStartTranslatePosition({
             x: mvt.x - vectorTranslation.x,
             y: mvt.y - vectorTranslation.y,
         });
-        console.log(
-            "tartTranslatePosition.x , tartTranslatePosition.y",
-            mvt.x - vectorTranslation.x,
-            mvt.y - vectorTranslation.y,
-        );
     }
 
     function handleMouseUp() {
-        console.log("MOUSE UP");
         setIsPressedCtrl(false);
         setPrevCursorTranslatePosition({
             x: vectorTranslation.x,
@@ -110,17 +110,17 @@ export default function Image({ targets, imgUrl, setTargets, gameId, sendToRoom,
         setSelectedPoint({ x: cursorPosition.x, y: cursorPosition.y });
         setTargetingBox({ x: clientPosition.x, y: clientPosition.y });
         setIsShowTargetingBox(!isShowTargetingBox);
-        console.log("!isShowTargetingBox:", !isShowTargetingBox);
     }
 
     function handleSelect(e) {
-        const name = targets.filter(target => target.id === +e.target.dataset.id)[0].name
-        console.log('name:', name)
+        const name = targets.filter(
+            (target) => target.id === +e.target.dataset.id,
+        )[0].name;
         setIsShowTargetingBox(false);
         fetch(`${import.meta.env.VITE_API_URL}/game/${gameId}`, {
             method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
             body: JSON.stringify({
                 x: selectedPoint.x,
@@ -131,17 +131,17 @@ export default function Image({ targets, imgUrl, setTargets, gameId, sendToRoom,
             .then((res) => res.json())
             .then((res) => {
                 const newTargets = targets.map((target) => {
-                        if (target.id === +e.target.dataset.id) {
-                            if (res.isHitTarget) {
-                                showOutput(`${target.name} Found`)
-                                target.found = true;
-                            } else {
-                                showOutput(`${target.name} Is Not Here`);
-                            }
+                    if (target.id === +e.target.dataset.id) {
+                        if (res.isHitTarget) {
+                            showOutput(`${target.name} Found`);
+                            target.found = true;
+                        } else {
+                            showOutput(`${target.name} Is Not Here`);
                         }
-                        return target;
-                    })
-                sendToRoom(newTargets, res.isHitTarget, name)
+                    }
+                    return target;
+                });
+                sendToRoom(newTargets, res.isHitTarget, name);
                 setTargets(newTargets);
             });
     }
@@ -193,38 +193,46 @@ export default function Image({ targets, imgUrl, setTargets, gameId, sendToRoom,
                             onClick={handleSelect}
                             id="target"
                         >
-                            {targets.map((target) => (
-                                !target.found && <li
-                                    key={target.name}
-                                    className={styles.li}
-                                    data-id={target.id}
-                                >
-                                    <img
-                                        data-id={target.id}
-                                        src="src/assets/level-scene.png"
-                                        className={styles.imageTarget}
-                                        src={target.url}
-                                        alt={target.name}
-                                    />{" "}
-                                    <div data-id={target.id}>{target.name}</div>
-                                </li>
-                            ))}
+                            {targets.map(
+                                (target) =>
+                                    !target.found && (
+                                        <li
+                                            key={target.name}
+                                            className={styles.li}
+                                            data-id={target.id}
+                                        >
+                                            <img
+                                                data-id={target.id}
+                                                src="src/assets/level-scene.png"
+                                                className={styles.imageTarget}
+                                                src={target.url}
+                                                alt={target.name}
+                                            />{" "}
+                                            <div data-id={target.id}>
+                                                {target.name}
+                                            </div>
+                                        </li>
+                                    ),
+                            )}
                         </ul>
                         {/* {targetingBox.x.toFixed(3)}:{targetingBox.y.toFixed(3)} */}
                     </div>
-                    {isOffline && <div
-                        style={{
-                            position: "absolute",
-                            zIndex: 3,
-                            top: clientPosition.y + "%",
-                            left: clientPosition.x + "%",
-                            backgroundColor: "red",
-                        }}
-                    >
-                        {cursorPosition.x.toFixed(3) +
-                            ":" +
-                            cursorPosition.y.toFixed(3)}
-                    </div>}
+                    {isOffline && (
+                        <div
+                            style={{
+                                position: "absolute",
+                                color: "blue",
+                                zIndex: 3,
+                                top: clientPosition.y + "%",
+                                left: clientPosition.x + "%",
+                                backgroundColor: "red",
+                            }}
+                        >
+                            {cursorPosition.x.toFixed(3) +
+                                ":" +
+                                cursorPosition.y.toFixed(3)}
+                        </div>
+                    )}
 
                     <img
                         ref={img}
@@ -257,7 +265,9 @@ export default function Image({ targets, imgUrl, setTargets, gameId, sendToRoom,
                         onDoubleClick={handleClick}
                     />
                 </div>
-                <button className={styles.reset} onClick={handleReset}>Reset view</button>
+                <button className={styles.reset} onClick={handleReset}>
+                    Reset view
+                </button>
             </div>
         </>
     );

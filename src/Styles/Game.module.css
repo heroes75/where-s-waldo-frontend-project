@@ -17,7 +17,7 @@
     border: 5px solid blueviolet;
 }
 
-.dialog h2{
+.dialog h2 {
     margin: 10px;
 }
 
@@ -38,7 +38,9 @@
     margin: 7px;
 }
 
-.replay, .home, .enter {
+.replay,
+.home,
+.enter {
     padding: 10px;
     font-weight: 700;
     margin: 5px;
@@ -74,7 +76,9 @@
     left: 5%;
     transform: translateX(-100px);
     opacity: 0;
-    transition: transform 1s, opacity 2s;
+    transition:
+        transform 1s,
+        opacity 2s;
 }
 
 .timeSection {
@@ -92,12 +96,10 @@
 }
 
 .timeSection:hover::before {
-    content: '1) double-click for display targets,2) scroll for zoom,3) click and maintain to move';
+    content: "1) double-click for display targets,2) scroll for zoom,3) click and maintain to move";
     position: absolute;
     top: -80px;
     width: 250px;
     color: aliceblue;
     background-color: gray;
 }
-
-

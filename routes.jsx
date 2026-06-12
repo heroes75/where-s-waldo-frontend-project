@@ -7,29 +7,29 @@ import Multiplayer from "./src/Components/Multiplayer";
 
 const routes = [
     {
-        element: <App/>,
-        path: '/'
+        element: <App />,
+        path: "/",
     },
     {
         element: <Game />,
-        path: '/game/:id'
+        path: "/game/:id",
     },
     {
         element: <GameOffline />,
-        path: '/offline'
+        path: "/offline",
     },
     {
         element: <Leadboard />,
-        path: '/leadboard'
+        path: "/leadboard",
     },
     {
         element: <Multiplayer />,
-        path: '/multiplayer'
+        path: "/multiplayer",
     },
     {
         element: <GameOnline />,
-        path: '/multiplayer/:roomId/:id'
-    }
-]
+        path: "/multiplayer/:roomId/:id",
+    },
+];
 
-export default routes
+export default routes;
