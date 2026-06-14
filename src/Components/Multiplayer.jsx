@@ -67,7 +67,7 @@ export default function Multiplayer() {
                     <p>
                         if you are reading it that's mean you're not connected
                         to a player but if you're feeling alone you can always
-                        duplicate this table to play against yourself.
+                        duplicate this tab to play against yourself.
                     </p>
                 </div>
             </main>
